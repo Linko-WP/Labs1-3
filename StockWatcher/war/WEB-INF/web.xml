@@ -8,12 +8,12 @@
   
   <servlet-mapping>
     <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/stockwatcher/greet</url-pattern>
+    <url-pattern>/awardwatcher/greet</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>StockWatcher.html</welcome-file>
+    <welcome-file>AwardWatcher.html</welcome-file>
   </welcome-file-list>
 
   <servlet>

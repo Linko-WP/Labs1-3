@@ -42,10 +42,18 @@ public class StockWatcher implements EntryPoint {
 	 investFlexTable.setText(0, 1, "Project");
 	 investFlexTable.setText(0, 2, "Award Ammount");
 	 investFlexTable.setText(0, 3, "Remove");
-
+	 
+	// Add styles to elements in the stock list table.
+	 investFlexTable.getRowFormatter().addStyleName(0, "watchListHeader");
+	 investFlexTable.addStyleName("watchList");
+	 investFlexTable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
+	 investFlexTable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
+	 investFlexTable.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
+	
     // Assemble Add Stock panel.
     addPanel.add(newCityTextBox);
     addPanel.add(addProjectButton);
+    addPanel.addStyleName("addPanel");
 
     // Assemble Main panel.
     mainPanel.add(investFlexTable);
@@ -118,9 +126,15 @@ public class StockWatcher implements EntryPoint {
 	    int row = investFlexTable.getRowCount();
 	    stocks.add(symbol);
 	    investFlexTable.setText(row, 0, symbol);
+	    investFlexTable.setWidget(row, 2, new Label());
+	    investFlexTable.getCellFormatter().addStyleName(row, 1, "watchListNumericColumn");
+		investFlexTable.getCellFormatter().addStyleName(row, 2, "watchListNumericColumn");
+		investFlexTable.getCellFormatter().addStyleName(row, 3, "watchListRemoveColumn");
+
 
 	    // Add a button to remove this stock from the table.
 	    Button removeStockButton = new Button("x");
+	    removeStockButton.addStyleDependentName("remove");
 	    removeStockButton.addClickHandler(new ClickHandler() {
 	      public void onClick(ClickEvent event) {
 	        int removedIndex = stocks.indexOf(symbol);
@@ -195,8 +209,20 @@ public class StockWatcher implements EntryPoint {
 
 	    // Populate the Price and Change fields with new data.
 	    investFlexTable.setText(row, 1, priceText);
-	    investFlexTable.setText(row, 2, changeText + " (" + changePercentText
-	        + "%)");
+	    Label changeWidget = (Label)investFlexTable.getWidget(row, 2);
+	    changeWidget.setText(changeText + " (" + changePercentText + "%)");
+	    
+	    // Change the color of text in the Change field based on its value.
+	    String changeStyleName = "noChange";
+	    if (price.getChangePercent() < -0.1f) {
+	      changeStyleName = "negativeChange";
+	    }
+	    else if (price.getChangePercent() > 0.1f) {
+	      changeStyleName = "positiveChange";
+	    }
+
+	    changeWidget.setStyleName(changeStyleName);
+	    
 	  }
 }
 
