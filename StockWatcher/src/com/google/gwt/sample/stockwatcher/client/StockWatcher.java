@@ -25,10 +25,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class StockWatcher implements EntryPoint {
 
   private VerticalPanel mainPanel = new VerticalPanel();
-  private FlexTable stocksFlexTable = new FlexTable();
+  private FlexTable investFlexTable = new FlexTable();
   private HorizontalPanel addPanel = new HorizontalPanel();
-  private TextBox newSymbolTextBox = new TextBox();
-  private Button addStockButton = new Button("Add");
+  private TextBox newCityTextBox = new TextBox();
+  private Button addProjectButton = new Button("Add");
   private Label lastUpdatedLabel = new Label();
   private ArrayList<String> stocks = new ArrayList<String>();
   private static final int REFRESH_INTERVAL = 5000; // ms
@@ -38,17 +38,17 @@ public class StockWatcher implements EntryPoint {
    */
   public void onModuleLoad() {
     // Create table for stock data.
-    stocksFlexTable.setText(0, 0, "Symbol");
-    stocksFlexTable.setText(0, 1, "Price");
-    stocksFlexTable.setText(0, 2, "Change");
-    stocksFlexTable.setText(0, 3, "Remove");
+	 investFlexTable.setText(0, 0, "City");
+	 investFlexTable.setText(0, 1, "Project");
+	 investFlexTable.setText(0, 2, "Award Ammount");
+	 investFlexTable.setText(0, 3, "Remove");
 
     // Assemble Add Stock panel.
-    addPanel.add(newSymbolTextBox);
-    addPanel.add(addStockButton);
+    addPanel.add(newCityTextBox);
+    addPanel.add(addProjectButton);
 
     // Assemble Main panel.
-    mainPanel.add(stocksFlexTable);
+    mainPanel.add(investFlexTable);
     mainPanel.add(addPanel);
     mainPanel.add(lastUpdatedLabel);
 
@@ -56,7 +56,7 @@ public class StockWatcher implements EntryPoint {
     RootPanel.get("stockList").add(mainPanel);
 
     // Move cursor focus to the input box.
-    newSymbolTextBox.setFocus(true);
+    newCityTextBox.setFocus(true);
     
 
     
@@ -72,18 +72,18 @@ public class StockWatcher implements EntryPoint {
     refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
 
     // Listen for mouse events on the Add button.
-    addStockButton.addClickHandler(new ClickHandler() {
+    addProjectButton.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
-        addStock();
+        addCity();
       }
     });
     
     
     // Listen for keyboard events in the input box.
-    newSymbolTextBox.addKeyPressHandler(new KeyPressHandler() {
+    newCityTextBox.addKeyPressHandler(new KeyPressHandler() {
       public void onKeyPress(KeyPressEvent event) {
         if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-          addStock();
+          addCity();
         }
       }
     });
@@ -97,27 +97,27 @@ public class StockWatcher implements EntryPoint {
    * Add stock to FlexTable. Executed when the user clicks the addStockButton or
    * presses enter in the newSymbolTextBox.
    */
-  private void addStock() {
-	  final String symbol = newSymbolTextBox.getText().toUpperCase().trim();
-	    newSymbolTextBox.setFocus(true);
+  private void addCity() {
+	  final String symbol = newCityTextBox.getText().toUpperCase().trim();
+	    newCityTextBox.setFocus(true);
 
 	    // Stock code must be between 1 and 10 chars that are numbers, letters, or dots.
 	    if (!symbol.matches("^[0-9A-Z\\.]{1,10}$")) {
 	      Window.alert("'" + symbol + "' is not a valid symbol.");
-	      newSymbolTextBox.selectAll();
+	      newCityTextBox.selectAll();
 	      return;
 	    }
 
-	    newSymbolTextBox.setText("");
+	    newCityTextBox.setText("");
 
 	    // Don't add the stock if it's already in the table.
 	    if (stocks.contains(symbol))
 	      return;
 
 	    // Add the stock to the table.
-	    int row = stocksFlexTable.getRowCount();
+	    int row = investFlexTable.getRowCount();
 	    stocks.add(symbol);
-	    stocksFlexTable.setText(row, 0, symbol);
+	    investFlexTable.setText(row, 0, symbol);
 
 	    // Add a button to remove this stock from the table.
 	    Button removeStockButton = new Button("x");
@@ -125,10 +125,10 @@ public class StockWatcher implements EntryPoint {
 	      public void onClick(ClickEvent event) {
 	        int removedIndex = stocks.indexOf(symbol);
 	        stocks.remove(removedIndex);        
-	        stocksFlexTable.removeRow(removedIndex + 1);
+	        investFlexTable.removeRow(removedIndex + 1);
 	      }
 	    });
-	    stocksFlexTable.setWidget(row, 3, removeStockButton);
+	    investFlexTable.setWidget(row, 3, removeStockButton);
 
 	 // Get the stock price.
 	    refreshWatchList();
@@ -144,13 +144,13 @@ public class StockWatcher implements EntryPoint {
     final double MAX_PRICE_CHANGE = 0.02; // +/- 2%
 
    
-    FortuneDatas[] prices = new FortuneDatas[stocks.size()];
+    AwardDatas[] prices = new AwardDatas[stocks.size()];
     for (int i = 0; i < stocks.size(); i++) {
       double price = Random.nextDouble() * MAX_PRICE;
       double change = price * MAX_PRICE_CHANGE
           * (Random.nextDouble() * 2.0 - 1.0);
 
-      prices[i] = new FortuneDatas(stocks.get(i), price, change);
+      prices[i] = new AwardDatas(stocks.get(i), price, change);
     }
 
     updateTable(prices);
@@ -162,7 +162,7 @@ public class StockWatcher implements EntryPoint {
 	   *
 	   * @param prices Stock data for all rows.
 	   */
-	  private void updateTable(FortuneDatas[] prices) {
+	  private void updateTable(AwardDatas[] prices) {
 	    for (int i = 0; i < prices.length; i++) {
 	      updateTable(prices[i]);
 	    }
@@ -178,7 +178,7 @@ public class StockWatcher implements EntryPoint {
 	   *
 	   * @param price Stock data for a single row.
 	   */
-	  private void updateTable(FortuneDatas price) {
+	  private void updateTable(AwardDatas price) {
 	    // Make sure the stock is still in the stock table.
 	    if (!stocks.contains(price.getSymbol())) {
 	      return;
@@ -194,8 +194,8 @@ public class StockWatcher implements EntryPoint {
 	    String changePercentText = changeFormat.format(price.getChangePercent());
 
 	    // Populate the Price and Change fields with new data.
-	    stocksFlexTable.setText(row, 1, priceText);
-	    stocksFlexTable.setText(row, 2, changeText + " (" + changePercentText
+	    investFlexTable.setText(row, 1, priceText);
+	    investFlexTable.setText(row, 2, changeText + " (" + changePercentText
 	        + "%)");
 	  }
 }
