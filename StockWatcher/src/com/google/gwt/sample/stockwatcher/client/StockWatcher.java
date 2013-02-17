@@ -192,20 +192,20 @@ public class StockWatcher implements EntryPoint {
 	   *
 	   * @param price Stock data for a single row.
 	   */
-	  private void updateTable(AwardDatas price) {
+	  private void updateTable(AwardDatas ammount) {
 	    // Make sure the stock is still in the stock table.
-	    if (!stocks.contains(price.getSymbol())) {
+	    if (!stocks.contains(ammount.getCity())) {
 	      return;
 	    }
 
-	    int row = stocks.indexOf(price.getSymbol()) + 1;
+	    int row = stocks.indexOf(ammount.getCity()) + 1;
 
 	    // Format the data in the Price and Change fields.
 	    String priceText = NumberFormat.getFormat("#,##0.00").format(
-	        price.getPrice());
+	    		ammount.getAmmount());
 	    NumberFormat changeFormat = NumberFormat.getFormat("+#,##0.00;-#,##0.00");
-	    String changeText = changeFormat.format(price.getChange());
-	    String changePercentText = changeFormat.format(price.getChangePercent());
+	    String changeText = changeFormat.format(ammount.getChange());
+	    String changePercentText = changeFormat.format(ammount.getChangePercent());
 
 	    // Populate the Price and Change fields with new data.
 	    investFlexTable.setText(row, 1, priceText);
@@ -214,10 +214,10 @@ public class StockWatcher implements EntryPoint {
 	    
 	    // Change the color of text in the Change field based on its value.
 	    String changeStyleName = "noChange";
-	    if (price.getChangePercent() < -0.1f) {
+	    if (ammount.getChangePercent() < -0.1f) {
 	      changeStyleName = "negativeChange";
 	    }
-	    else if (price.getChangePercent() > 0.1f) {
+	    else if (ammount.getChangePercent() > 0.1f) {
 	      changeStyleName = "positiveChange";
 	    }
 
