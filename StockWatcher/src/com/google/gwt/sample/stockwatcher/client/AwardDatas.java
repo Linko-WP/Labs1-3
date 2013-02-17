@@ -1,6 +1,8 @@
 package com.google.gwt.sample.stockwatcher.client;
 
-public class AwardDatas {
+import java.io.Serializable;
+
+public class AwardDatas implements Serializable {
 	
 	  private String city;
 	  //TODO : add project associated
@@ -29,7 +31,7 @@ public class AwardDatas {
 	  }
 
 	  public double getChangePercent() {
-	    return 10.0 * this.change / this.ammount;
+	    return 100.0 * this.change / this.ammount;
 	  }
 
 	  public void setCity(String city) {

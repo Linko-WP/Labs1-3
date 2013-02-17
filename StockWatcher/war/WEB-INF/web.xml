@@ -15,6 +15,17 @@
   <welcome-file-list>
     <welcome-file>AwardWatcher.html</welcome-file>
   </welcome-file-list>
+  
+<!-- Servlets -->
+  <servlet>
+    <servlet-name>AwardDataServiceImpl</servlet-name>
+    <servlet-class>com.google.gwt.sample.stockwatcher.server.AwardDataServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>AwardDataServiceImpl</servlet-name>
+    <url-pattern>/stockwatcher/AwardDatas</url-pattern>
+  </servlet-mapping>
 
   <servlet>
     <servlet-name>SystemServiceServlet</servlet-name>

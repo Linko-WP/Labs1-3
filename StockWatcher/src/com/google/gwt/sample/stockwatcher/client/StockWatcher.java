@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -12,6 +13,7 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
@@ -32,6 +34,7 @@ public class StockWatcher implements EntryPoint {
   private Label lastUpdatedLabel = new Label();
   private ArrayList<String> stocks = new ArrayList<String>();
   private static final int REFRESH_INTERVAL = 5000; // ms
+  private AwardDataServiceAsync stockPriceSvc = GWT.create(AwardDataService.class);
 
   /**
    * Entry point method.
@@ -154,20 +157,25 @@ public class StockWatcher implements EntryPoint {
    * Generate random stock prices.
    */
   private void refreshWatchList() {
-    final double MAX_PRICE = 100.0; // $100.00
-    final double MAX_PRICE_CHANGE = 0.02; // +/- 2%
+	  
+	// Initialize the service proxy.
+	    if (stockPriceSvc == null) {
+	      stockPriceSvc = GWT.create(AwardDataService.class);
+	    }
 
-   
-    AwardDatas[] prices = new AwardDatas[stocks.size()];
-    for (int i = 0; i < stocks.size(); i++) {
-      double price = Random.nextDouble() * MAX_PRICE;
-      double change = price * MAX_PRICE_CHANGE
-          * (Random.nextDouble() * 2.0 - 1.0);
+	    // Set up the callback object.
+	    AsyncCallback<AwardDatas[]> callback = new AsyncCallback<AwardDatas[]>() {
+	      public void onFailure(Throwable caught) {
+	        // TODO: Do something with errors.
+	      }
 
-      prices[i] = new AwardDatas(stocks.get(i), price, change);
-    }
+	      public void onSuccess(AwardDatas[] result) {
+	        updateTable(result);
+	      }
+	    };
 
-    updateTable(prices);
+	    // Make the call to the stock price service.
+	    stockPriceSvc.getAmmounts(stocks.toArray(new String[0]), callback);
     
   }
   
