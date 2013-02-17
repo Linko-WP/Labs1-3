@@ -12,7 +12,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -32,19 +31,21 @@ public class StockWatcher implements EntryPoint {
   private TextBox newCityTextBox = new TextBox();
   private Button addProjectButton = new Button("Add");
   private Label lastUpdatedLabel = new Label();
-  private ArrayList<String> stocks = new ArrayList<String>();
+  private ArrayList<String> awards = new ArrayList<String>();
   private static final int REFRESH_INTERVAL = 5000; // ms
   private AwardDataServiceAsync stockPriceSvc = GWT.create(AwardDataService.class);
   private Label errorMsgLabel = new Label();
-
+  
   
   /**
    * Entry point method.
    */
   public void onModuleLoad() {
+
+	  
     // Create table for stock data.
 	 investFlexTable.setText(0, 0, "City");
-	 investFlexTable.setText(0, 1, "Project");
+	 investFlexTable.setText(0, 1, "Ammount");
 	 investFlexTable.setText(0, 2, "Award Ammount");
 	 investFlexTable.setText(0, 3, "Remove");
 	 
@@ -129,12 +130,12 @@ public class StockWatcher implements EntryPoint {
 	    newCityTextBox.setText("");
 
 	    // Don't add the stock if it's already in the table.
-	    if (stocks.contains(symbol))
+	    if (awards.contains(symbol))
 	      return;
 
 	    // Add the stock to the table.
 	    int row = investFlexTable.getRowCount();
-	    stocks.add(symbol);
+	    awards.add(symbol);
 	    investFlexTable.setText(row, 0, symbol);
 	    investFlexTable.setWidget(row, 2, new Label());
 	    investFlexTable.getCellFormatter().addStyleName(row, 1, "watchListNumericColumn");
@@ -147,8 +148,8 @@ public class StockWatcher implements EntryPoint {
 	    removeStockButton.addStyleDependentName("remove");
 	    removeStockButton.addClickHandler(new ClickHandler() {
 	      public void onClick(ClickEvent event) {
-	        int removedIndex = stocks.indexOf(symbol);
-	        stocks.remove(removedIndex);        
+	        int removedIndex = awards.indexOf(symbol);
+	        awards.remove(removedIndex);        
 	        investFlexTable.removeRow(removedIndex + 1);
 	      }
 	    });
@@ -173,10 +174,11 @@ public class StockWatcher implements EntryPoint {
 	    // Set up the callback object.
 	    AsyncCallback<AwardDatas[]> callback = new AsyncCallback<AwardDatas[]>() {
 	      public void onFailure(Throwable caught) {
+	    	  
 	    	// If the stock code is in the list of delisted codes, display an error message.
 	          String details = caught.getMessage();
 	          if (caught instanceof DelistedException) {
-	            details = "Company '" + ((DelistedException)caught).getSymbol() + "' was delisted";
+	            details = "City '" + ((DelistedException)caught).getSymbol() + "' was delisted";
 	          }
 
 	          errorMsgLabel.setText("Error: " + details);
@@ -190,7 +192,7 @@ public class StockWatcher implements EntryPoint {
 	    };
 
 	    // Make the call to the stock price service.
-	    stockPriceSvc.getAmmounts(stocks.toArray(new String[0]), callback);
+	    stockPriceSvc.getAmmounts(awards.toArray(new String[0]), callback);
     
   }
   
@@ -219,11 +221,11 @@ public class StockWatcher implements EntryPoint {
 	   */
 	  private void updateTable(AwardDatas ammount) {
 	    // Make sure the stock is still in the stock table.
-	    if (!stocks.contains(ammount.getCity())) {
+	    if (!awards.contains(ammount.getCity())) {
 	      return;
 	    }
 
-	    int row = stocks.indexOf(ammount.getCity()) + 1;
+	    int row = awards.indexOf(ammount.getCity()) + 1;
 
 	    // Format the data in the Price and Change fields.
 	    String priceText = NumberFormat.getFormat("#,##0.00").format(
