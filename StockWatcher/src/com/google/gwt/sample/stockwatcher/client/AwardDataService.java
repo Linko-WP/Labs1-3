@@ -8,5 +8,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("AwardDatas")
 public interface AwardDataService extends RemoteService {
 	
-	AwardDatas[] getAmmounts(String[] symbols);
+	AwardDatas[] getAmmounts(String[] symbols) throws DelistedException;
 }
