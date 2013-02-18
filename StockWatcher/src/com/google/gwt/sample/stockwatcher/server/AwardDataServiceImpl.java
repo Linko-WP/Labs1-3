@@ -24,19 +24,22 @@ public class AwardDataServiceImpl extends RemoteServiceServlet implements
 	 */
 	
 	@Override
-	public AwardDatas[] getCities(String[] cities) throws DelistedException{
-		 Random rnd = new Random();
+	public AwardDatas[] getCities(AwardDatas[] cities) throws DelistedException{
+		
+		
+		AwardDatas[] ammounts = new AwardDatas[cities.length];
 
-		    AwardDatas[] ammounts = new AwardDatas[cities.length];
+		Random rnd = new Random();
+
 		    for (int i=0; i<cities.length; i++) {
-		        if (cities[i].equals("ERR")) {
+		        /*if (cities[i].equals("ERR")) {
 		            throw new DelistedException("ERR");
 		          }
-		        
-		      double ammount = rnd.nextDouble() * MAX_AWARD;
+		        */
+		      double ammount = cities[i].getAmmount() * MAX_AWARD;
 		      double change = ammount * MAX_PRICE_CHANGE * (rnd.nextDouble() * 2f - 1f);
 
-		      ammounts[i] = new AwardDatas(cities[i], ammount, change);
+		      ammounts[i] = new AwardDatas(cities[i].getCity(), cities[i].getAmmount(), change);
 		    }
 
 		    return ammounts;

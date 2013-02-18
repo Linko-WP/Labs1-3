@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 
+import com.allen_sauer.gwt.dnd.client.PickupDragController;
+import com.allen_sauer.gwt.dnd.client.drop.AbsolutePositionDropController;
+import com.allen_sauer.gwt.dnd.client.drop.DropController;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -18,6 +21,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -25,10 +29,12 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class StockWatcher implements EntryPoint {
 
-  private VerticalPanel mainPanel = new VerticalPanel();
+  private AbsolutePanel mainPanel = new AbsolutePanel();
+  private AbsolutePanel targetPanel = new AbsolutePanel();
   private FlexTable investFlexTable = new FlexTable();
   private HorizontalPanel addPanel = new HorizontalPanel();
   private TextBox newCityTextBox = new TextBox();
@@ -49,68 +55,105 @@ public class StockWatcher implements EntryPoint {
   private AwardDataServiceAsync stockPriceSvc = GWT.create(AwardDataService.class);
   private Label errorMsgLabel = new Label();
   
+//Create a DragController for each logical area where a set of draggable
+  // widgets and drop targets will be allowed to interact with one another.
+  PickupDragController dragController = new PickupDragController(targetPanel, true);
+  
+//create a DropController for each drop target on which draggable widgets
+  // can be dropped
+  DropController dropController = new AbsolutePositionDropController(mainPanel);
   
   /**
    * Entry point method.
    */
   public void onModuleLoad() {
-
-	 // Con esto añadimos al arraylist cada una de las ciudades del vector cities
+	  
+		 // Con esto a–adimos al arraylist cada una de las ciudades del vector cities
 	  Iterator<Integer> itr_zip = zips.iterator();
 	  Iterator<Integer> itr_am = amounts.iterator();
-	  
+
 	 for(String city:cities){ 
 		 Integer zip = itr_zip.next();
 		 Integer ammt = itr_am.next();
 		 elements.add(new AwardDatas(city,zip,ammt,0));
 	 }
+
+	// Create a boundary panel to constrain all drag operations
+
+	    mainPanel.setPixelSize(300, 300);
 	  
-    // Create table for stock data.
-	 investFlexTable.setText(0, 0, "City");
-	 investFlexTable.setText(0, 1, "Ammount");
-	 investFlexTable.setText(0, 2, "Award Ammount");
-	 investFlexTable.setText(0, 3, "Remove");
-	 
-	// Add styles to elements in the stock list table.
-	 investFlexTable.getRowFormatter().addStyleName(0, "watchListHeader");
-	 investFlexTable.addStyleName("watchList");
-	 investFlexTable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
-	 investFlexTable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
-	 investFlexTable.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
-	
-    // Assemble Add Stock panel.
-    addPanel.add(newCityTextBox);
-    addPanel.add(addProjectButton);
-    addPanel.addStyleName("addPanel");
-
-    // Assemble Error panel.
-    errorMsgLabel.setStyleName("errorMessage");
-    errorMsgLabel.setVisible(false);
-    mainPanel.add(errorMsgLabel);
-    
-    // Assemble Main panel.
-    mainPanel.add(investFlexTable);
-    mainPanel.add(addPanel);
-    mainPanel.add(lastUpdatedLabel);
-
-    // Associate the Main panel with the HTML host page.
-    RootPanel.get("stockList").add(mainPanel);
-
-    // Move cursor focus to the input box.
-    newCityTextBox.setFocus(true);
-    
-
-    
- // Setup timer to refresh list automatically.
-    Timer refreshTimer = new Timer() {
-      @Override
-      public void run() {
-        refreshWatchList();
-      }
+	 // Create table for stock data.
+		 investFlexTable.setText(0, 0, "City");
+		 investFlexTable.setText(0, 1, "Ammount");
+		 investFlexTable.setText(0, 2, "Award Ammount");
+		 investFlexTable.setText(0, 3, "Remove");
+		 
+		// Add styles to elements in the stock list table.
+		 investFlexTable.getRowFormatter().addStyleName(0, "watchListHeader");
+		 investFlexTable.addStyleName("watchList");
+		 investFlexTable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
+		 investFlexTable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
+		 investFlexTable.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
+		
+	    // Assemble Add Stock panel.
+	    addPanel.add(newCityTextBox);
+	    addPanel.add(addProjectButton);
+	    addPanel.addStyleName("addPanel");
+	    
 
 
-    };
-    refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
+	    // Assemble Error panel.
+	    errorMsgLabel.setStyleName("errorMessage");
+	    errorMsgLabel.setVisible(false);
+	    mainPanel.add(errorMsgLabel);
+	    
+	    // Assemble Main panel.
+	    mainPanel.add(investFlexTable);
+	    mainPanel.add(addPanel);
+	    mainPanel.add(lastUpdatedLabel);
+	  
+	    targetPanel.setPixelSize(300, 200);
+	    targetPanel.addStyleName("getting-started-blue");
+
+	    // Add both panels to the root panel
+	    RootPanel.get().add(mainPanel);
+	    RootPanel.get().add(targetPanel);
+	  //  boundaryPanel.add(targetPanel, 10, 10);
+
+	    
+
+	    // Positioner is always constrained to the boundary panel
+	    // Use 'true' to also constrain the draggable or drag proxy to the boundary panel
+	    dragController.setBehaviorConstrainedToBoundaryPanel(false);
+
+	    // Allow multiple widgets to be selected at once using CTRL-click
+	    dragController.setBehaviorMultipleSelection(true);
+
+	    
+
+	    // Don't forget to register each DropController with a DragController
+	    dragController.registerDropController(dropController);
+
+	    // create a few randomly placed draggable labels
+	    for (int i = 1; i <= 5; i++) {
+	      // create a label and give it style
+	      Label label = new Label("Label #" + i, false);
+	      label.addStyleName("getting-started-label");
+
+	      // add it to the DOM so that offset width/height becomes available
+	      mainPanel.add(label, 0, 0);
+	      // move the label
+	      mainPanel.setWidgetPosition(label, 0, 0);
+	      // make the label draggable
+	      dragController.makeDraggable(label);
+	    }
+	    
+	/*    for(int row = 0; row < investFlexTable.getRowCount(); row++ ){
+
+	    	Widget w = investFlexTable.getWidget(row, 0);
+	    	dragController.makeDraggable(w);
+  		}*/
+  //  refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
 
     // Listen for mouse events on the Add button.
     addProjectButton.addClickHandler(new ClickHandler() {
@@ -129,6 +172,9 @@ public class StockWatcher implements EntryPoint {
       }
     });
     
+    //	Widget w = investFlexTable.getWidget(row, 0);
+	
+    //	dragController.makeDraggable(w);
     
   }
   
@@ -138,7 +184,7 @@ public class StockWatcher implements EntryPoint {
    * Add cities to FlexTable. Executed when the user clicks the addStockButton or
    * presses enter in the newSymbolTextBox.
    */
-  private void addCity() {
+  private void addCity( ) {
 	  final String city = newCityTextBox.getText().toUpperCase().trim();
 	 
 	    newCityTextBox.setFocus(true);
@@ -161,9 +207,30 @@ public class StockWatcher implements EntryPoint {
 	    }
 	    
 	    //TODO: falta poner los datos en la tabla, para la ciudad que hemos introducido
+	/*    Iterator<Integer> itr_zip = zips.iterator();
+		Iterator<Integer> itr_am = amounts.iterator();
+	
+		Integer zip =0;
+		 Integer ammt=0;
+		  
+		 for(String name:cities){ 
+			 if(name == city){
+				 zip = itr_zip.next();
+				 ammt = itr_am.next();
+			 
+			 }
+		 }*/
+		// elements.add(new AwardDatas(city,zip,ammt,0));
+		 
 	    int row = investFlexTable.getRowCount();
 	    awards.add(city);
+
+    //	Widget w = investFlexTable.getWidget(row, 0);
+    	
+    //	dragController.makeDraggable(w);
+    	
 	    investFlexTable.setText(row, 0, city);
+	//    investFlexTable.setText(row, 1, ammt.toString());
 	    investFlexTable.setWidget(row, 2, new Label());
 	    investFlexTable.getCellFormatter().addStyleName(row, 1, "watchListNumericColumn");
 		investFlexTable.getCellFormatter().addStyleName(row, 2, "watchListNumericColumn");
@@ -221,7 +288,9 @@ public class StockWatcher implements EntryPoint {
 	    };
 
 	    // Make the call to the stock price service.
-	    stockPriceSvc.getCities(awards.toArray(new String[0]), callback);
+	    //TODO: que muestre los valores apropiados
+	    AwardDatas [] elem = elements.toArray(new AwardDatas[elements.size()]);
+	    stockPriceSvc.getCities(elem, callback);
     
   }
   

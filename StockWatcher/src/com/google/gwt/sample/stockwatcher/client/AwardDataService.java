@@ -1,6 +1,8 @@
 package com.google.gwt.sample.stockwatcher.client;
 
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -8,5 +10,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("AwardDatas")
 public interface AwardDataService extends RemoteService {
 	
-	AwardDatas[] getCities(String[] cities) throws DelistedException;
+	AwardDatas[] getCities(AwardDatas[] cities) throws DelistedException;
 }
