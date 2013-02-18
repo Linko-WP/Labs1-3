@@ -4,6 +4,7 @@ package com.google.gwt.sample.stockwatcher.client;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -35,9 +36,14 @@ public class StockWatcher implements EntryPoint {
   private Label lastUpdatedLabel = new Label();
   
  //TODO: aqu’ creo que deber’a ser un ArrayList de AwardDatas
-  private ArrayList<String> cities = new ArrayList<String>(Arrays.asList("Kansas","Oregon","Linkoping","California"));
-  private ArrayList<AwardDatas> elements = new ArrayList<AwardDatas>();
+  private ArrayList<String> cities = new ArrayList<String>(Arrays.asList(
+		  "New Yor","Washington","Chicago", "Portland", "Bridgeport", "Westminster", "Denver", "Austin", "Saint Paul"));
+  private ArrayList<Integer> zips = new ArrayList<Integer>(Arrays.asList(
+		  10027,20009,60634, 97209, 6604, 80234,80229,78714,55104));
+  private ArrayList<Integer> amounts = new ArrayList<Integer>(Arrays.asList(
+		  5000000,3968339,4999553,6170483,4999998,5000000,4999280,4135000,5000000));
   
+  private ArrayList<AwardDatas> elements = new ArrayList<AwardDatas>();
   private ArrayList<String> awards = new ArrayList<String>();
   private static final int REFRESH_INTERVAL = 5000; // ms
   private AwardDataServiceAsync stockPriceSvc = GWT.create(AwardDataService.class);
@@ -51,8 +57,14 @@ public class StockWatcher implements EntryPoint {
   public void onModuleLoad() {
 
 	 // Con esto a–adimos al arraylist cada una de las ciudades del vector cities
-	 // La pega es que por ahora todas tienen los mismos valores iniciales
-	 for(String city:cities) elements.add(new AwardDatas(city,12345,0));
+	  Iterator<Integer> itr_zip = zips.iterator();
+	  Iterator<Integer> itr_am = amounts.iterator();
+	  
+	 for(String city:cities){ 
+		 Integer zip = itr_zip.next();
+		 Integer ammt = itr_am.next();
+		 elements.add(new AwardDatas(city,zip,ammt,0));
+	 }
 	  
     // Create table for stock data.
 	 investFlexTable.setText(0, 0, "City");

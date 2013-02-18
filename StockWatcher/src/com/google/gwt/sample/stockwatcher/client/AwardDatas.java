@@ -6,7 +6,7 @@ public class AwardDatas implements Serializable {
 	
 	  private String city;
 	//TODO : insertar el projecto en todas las funciones (si hay tiempo)
-	  private String project;
+	  private double org_zip;
 	  private double ammount;
 	  private double change;
 
@@ -17,6 +17,13 @@ public class AwardDatas implements Serializable {
 	    this.city = city;
 	    this.ammount = ammount;
 	    this.change = change;
+	  }
+	  
+	  public AwardDatas(String city, double zip,  double ammount, double change) {
+		    this.city = city;
+		    this.org_zip = zip;
+		    this.ammount = ammount;
+		    this.change = change;
 	  }
 
 	  public String getCity() {
