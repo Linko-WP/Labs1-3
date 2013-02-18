@@ -6,7 +6,9 @@ body {
 
 .center{
 	position: absolute;
-	margin-left:50px;
+	text-align: justify;
+	width: 50%;
+    margin: 0px auto;
 }
 
 .top{
@@ -22,6 +24,7 @@ body {
 
 /* stock list flex table */
 .watchList {
+  width:45%;
   border: 1px solid silver;
   padding: 2px;
   margin-bottom:6px;
