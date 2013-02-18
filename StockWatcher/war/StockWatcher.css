@@ -4,6 +4,15 @@ body {
   padding: 10px;
 }
 
+.center{
+	position: absolute;
+	margin-left:50px;
+}
+
+.top{
+	width:45%;
+}
+
 /* stock list header row */
 .watchListHeader {
   background-color: #2062B8;

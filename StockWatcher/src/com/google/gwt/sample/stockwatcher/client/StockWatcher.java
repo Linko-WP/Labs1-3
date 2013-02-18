@@ -193,6 +193,7 @@ public class StockWatcher implements EntryPoint {
    */
   private void refreshWatchList() {
 	  
+	  
 	// Initialize the service proxy.
 	    if (stockPriceSvc == null) {
 	      stockPriceSvc = GWT.create(AwardDataService.class);
@@ -200,6 +201,7 @@ public class StockWatcher implements EntryPoint {
 
 	    // Set up the callback object.
 	    AsyncCallback<AwardDatas[]> callback = new AsyncCallback<AwardDatas[]>() {
+	    	
 	      public void onFailure(Throwable caught) {
 	    	  
 	    	// If the stock code is in the list of delisted codes, display an error message.
@@ -219,7 +221,7 @@ public class StockWatcher implements EntryPoint {
 	    };
 
 	    // Make the call to the stock price service.
-	    stockPriceSvc.getAmmounts(awards.toArray(new String[0]), callback);
+	    stockPriceSvc.getCities(awards.toArray(new String[0]), callback);
     
   }
   
