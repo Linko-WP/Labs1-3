@@ -31,12 +31,15 @@ public class StockWatcher implements EntryPoint {
   private TextBox newCityTextBox = new TextBox();
   private Button addProjectButton = new Button("Add");
   private Label lastUpdatedLabel = new Label();
+  
+ //TODO: aquí creo que debería ser un ArrayList de AwardDatas
   private ArrayList<String> awards = new ArrayList<String>();
   private static final int REFRESH_INTERVAL = 5000; // ms
   private AwardDataServiceAsync stockPriceSvc = GWT.create(AwardDataService.class);
   private Label errorMsgLabel = new Label();
   
   
+  //TODO: en algún momento tendríamos que meter los datos en el arraylist
   /**
    * Entry point method.
    */
@@ -128,6 +131,9 @@ public class StockWatcher implements EntryPoint {
 	    }
 
 	    newCityTextBox.setText("");
+	    
+	    //TODO: aquí debería ser al revés, si la ciudad ya está "introducida"
+	    //entonces ponemos los datos en la tabla, si nop, mostramos un mensaje de alerta
 
 	    // Don't add the stock if it's already in the table.
 	    if (awards.contains(symbol))

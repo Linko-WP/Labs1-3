@@ -5,7 +5,8 @@ import java.io.Serializable;
 public class AwardDatas implements Serializable {
 	
 	  private String city;
-	  //TODO : add project associated
+	//TODO : insertar el projecto en todas las funciones (si hay tiempo)
+	  private String project;
 	  private double ammount;
 	  private double change;
 

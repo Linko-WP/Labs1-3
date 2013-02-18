@@ -14,6 +14,15 @@ public class AwardDataServiceImpl extends RemoteServiceServlet implements
 	private static final double MAX_AWARD= 100.0; // $100.00
 	private static final double MAX_PRICE_CHANGE = 0.02; // +/- 2%
 	  
+	
+	/*TODO: segœn el lab 2 aqu’ es donde hay que hacer los cambios: 
+	 * Add the ability to populate your table with your own tabular data read from the server. 
+	 * Follow the instructions in the tutorial and exchange the random-generated data supplied 
+	 * by the code listed under the heading Write the server-side implementation with code that 
+	 * reads your tabular data from the server. (In this lab the data on the server can be stored 
+	 * in files or just use temporary variables) .
+	 */
+	
 	@Override
 	public AwardDatas[] getAmmounts(String[] cities) throws DelistedException{
 		 Random rnd = new Random();
