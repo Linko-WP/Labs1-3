@@ -2,6 +2,7 @@ package com.google.gwt.sample.stockwatcher.client;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -34,6 +35,9 @@ public class StockWatcher implements EntryPoint {
   private Label lastUpdatedLabel = new Label();
   
  //TODO: aqu’ creo que deber’a ser un ArrayList de AwardDatas
+  private ArrayList<String> cities = new ArrayList<String>(Arrays.asList("Kansas","Oregon","Linkoping","California"));
+  private ArrayList<AwardDatas> elements = new ArrayList<AwardDatas>();
+  
   private ArrayList<String> awards = new ArrayList<String>();
   private static final int REFRESH_INTERVAL = 5000; // ms
   private AwardDataServiceAsync stockPriceSvc = GWT.create(AwardDataService.class);
@@ -46,6 +50,9 @@ public class StockWatcher implements EntryPoint {
    */
   public void onModuleLoad() {
 
+	 // Con esto a–adimos al arraylist cada una de las ciudades del vector cities
+	 // La pega es que por ahora todas tienen los mismos valores iniciales
+	 for(String city:cities) elements.add(new AwardDatas(city,12345,0));
 	  
     // Create table for stock data.
 	 investFlexTable.setText(0, 0, "City");
