@@ -119,6 +119,10 @@
 	</classpathentry>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.7.2.jar"/>
+=======
+	<classpathentry exported="true" kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER/v2"/>
+>>>>>>> Añado un montón de archivos que no se para que sirven...
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
