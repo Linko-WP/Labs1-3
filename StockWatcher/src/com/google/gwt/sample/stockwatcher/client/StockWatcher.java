@@ -37,7 +37,7 @@ public class StockWatcher implements EntryPoint {
   
  //TODO: aquí creo que debería ser un ArrayList de AwardDatas
   private ArrayList<String> cities = new ArrayList<String>(Arrays.asList(
-		  "New Yor","Washington","Chicago", "Portland", "Bridgeport", "Westminster", "Denver", "Austin", "Saint Paul"));
+		  "NEW YORK","Washington","CHICAGO", "Portland", "Bridgeport", "Westminster", "Denver", "Austin", "Saint Paul"));
   private ArrayList<Integer> zips = new ArrayList<Integer>(Arrays.asList(
 		  10027,20009,60634, 97209, 6604, 80234,80229,78714,55104));
   private ArrayList<Integer> amounts = new ArrayList<Integer>(Arrays.asList(
@@ -50,7 +50,6 @@ public class StockWatcher implements EntryPoint {
   private Label errorMsgLabel = new Label();
   
   
-  //TODO: en algún momento tendríamos que meter los datos en el arraylist
   /**
    * Entry point method.
    */
@@ -136,33 +135,35 @@ public class StockWatcher implements EntryPoint {
 
   
   /**
-   * Add stock to FlexTable. Executed when the user clicks the addStockButton or
+   * Add cities to FlexTable. Executed when the user clicks the addStockButton or
    * presses enter in the newSymbolTextBox.
    */
   private void addCity() {
-	  final String symbol = newCityTextBox.getText().toUpperCase().trim();
+	  final String city = newCityTextBox.getText().toUpperCase().trim();
+	 
 	    newCityTextBox.setFocus(true);
 
 	    // Stock code must be between 1 and 10 chars that are numbers, letters, or dots.
-	    if (!symbol.matches("^[0-9A-Z\\.]{1,10}$")) {
-	      Window.alert("'" + symbol + "' is not a valid symbol.");
+	/*    if (!city.matches("^[0-9A-Z\\.]{1,100}$")) {
+	      Window.alert("'" + city + "' is not a valid city.");
 	      newCityTextBox.selectAll();
 	      return;
 	    }
 
 	    newCityTextBox.setText("");
 	    
-	    //TODO: aquí debería ser al revés, si la ciudad ya está "introducida"
-	    //entonces ponemos los datos en la tabla, si nop, mostramos un mensaje de alerta
-
-	    // Don't add the stock if it's already in the table.
-	    if (awards.contains(symbol))
-	      return;
-
-	    // Add the stock to the table.
+	    */
+	    
+	    if (!cities.contains(city)){
+	    	Window.alert("The inserted city: '" + city + "' is not a valid city.");
+		      newCityTextBox.selectAll();
+		      return;
+	    }
+	    
+	    //TODO: falta poner los datos en la tabla, para la ciudad que hemos introducido
 	    int row = investFlexTable.getRowCount();
-	    awards.add(symbol);
-	    investFlexTable.setText(row, 0, symbol);
+	    awards.add(city);
+	    investFlexTable.setText(row, 0, city);
 	    investFlexTable.setWidget(row, 2, new Label());
 	    investFlexTable.getCellFormatter().addStyleName(row, 1, "watchListNumericColumn");
 		investFlexTable.getCellFormatter().addStyleName(row, 2, "watchListNumericColumn");
@@ -174,7 +175,7 @@ public class StockWatcher implements EntryPoint {
 	    removeStockButton.addStyleDependentName("remove");
 	    removeStockButton.addClickHandler(new ClickHandler() {
 	      public void onClick(ClickEvent event) {
-	        int removedIndex = awards.indexOf(symbol);
+	        int removedIndex = awards.indexOf(city);
 	        awards.remove(removedIndex);        
 	        investFlexTable.removeRow(removedIndex + 1);
 	      }
