@@ -91,7 +91,7 @@ public class StockWatcher implements EntryPoint {
 	 // Create table for stock data.
 		 investFlexTable.setText(0, 0, "City");
 		 investFlexTable.setText(0, 1, "Ammount");
-		 investFlexTable.setText(0, 2, "Award Ammount");
+		 investFlexTable.setText(0, 2, "Applicable Taxes");
 		 investFlexTable.setText(0, 3, "Remove");
 		 
 		// Add styles to elements in the stock list table.
@@ -402,14 +402,14 @@ public class StockWatcher implements EntryPoint {
 	    // Populate the Price and Change fields with new data.
 	    investFlexTable.setText(row, 1, priceText);
 	    Label changeWidget = (Label)investFlexTable.getWidget(row, 2);
-	    changeWidget.setText(changeText + " (" + changePercentText + "%)");
+	    changeWidget.setText(   changeText + "%");
 	    
 	    // Change the color of text in the Change field based on its value.
 	    String changeStyleName = "noChange";
-	    if (ammount.getChangePercent() < -0.1f) {
+	    if (ammount.getChange() < -0.1f) {
 	      changeStyleName = "negativeChange";
 	    }
-	    else if (ammount.getChangePercent() > 0.1f) {
+	    else if (ammount.getChange() > 0.1f) {
 	      changeStyleName = "positiveChange";
 	    }
 
