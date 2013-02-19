@@ -1,19 +1,15 @@
 /* Formatting specific to the StockWatcher application */
 
-body {
+.body {
   padding: 10px;
+
 }
 
 .center{
-	position: absolute;
-	text-align: justify;
-	width: 50%;
-    margin: 0px auto;
+	text-align: center;
+
 }
 
-.top{
-	width:45%;
-}
 
 /* stock list header row */
 .watchListHeader {
@@ -42,11 +38,21 @@ body {
 }
 
 /* Add Stock panel */
-.addPanel {
-  width:45%;
- 
+.textBox{
+  width:300px;
+
 }
 
+.main{
+	
+}
+
+.addPanel{
+	width:45%;
+}
+.button{
+	width: 100px;
+}
 /* stock list, the Remove button */
 .gwt-Button-remove {
   width: 50px;

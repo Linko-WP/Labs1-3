@@ -51,7 +51,7 @@ public class StockWatcher implements EntryPoint {
   
  //TODO: aqu’ creo que deber’a ser un ArrayList de AwardDatas
   private ArrayList<String> cities = new ArrayList<String>(Arrays.asList(
-		  "NEW YORK","Washington","CHICAGO", "Portland", "Bridgeport", "Westminster", "Denver", "Austin", "Saint Paul"));
+		  "NEW YORK","WASHINGTON","CHICAGO", "PORTLAND", "BRIDGEPORT", "WESTMINSTER", "DENVER", "AUSTIN", "SAINT PAUL"));
   private ArrayList<Integer> zips = new ArrayList<Integer>(Arrays.asList(
 		  10027,20009,60634, 97209, 6604, 80234,80229,78714,55104));
   private ArrayList<Integer> amounts = new ArrayList<Integer>(Arrays.asList(
@@ -102,14 +102,21 @@ public class StockWatcher implements EntryPoint {
 		 investFlexTable.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
 		
 	    // Assemble Add Stock panel.
+		 newCityTextBox.addStyleName("textBox");
+		addProjectButton.addStyleName("button");
+		addProjectButton.setWidth("100px");
 	    addPanel.add(newCityTextBox);
 	    addPanel.add(addProjectButton);
 	    addPanel.addStyleName("addPanel");
 	    
 	    // Assemble Add Stock panel.
 	    insertCityTextA.setVisibleLines(4);
+	    insertCityTextA.addStyleName("textBox");
+	    insertProjectButton.addStyleName("button");
+	    insertProjectButton.setWidth("100px");
 	    insertPanel.add(insertCityTextA);
 	    insertPanel.add(insertProjectButton);
+	    
 	    insertPanel.addStyleName("addPanel");
 
 	    // Assemble Error panel.
@@ -118,6 +125,7 @@ public class StockWatcher implements EntryPoint {
 	    mainPanel.add(errorMsgLabel);
 	    
 	    // Assemble Main panel.
+	    mainPanel.setStyleName("main");
 	    mainPanel.add(investFlexTable);
 	    mainPanel.add(addPanel);
 	    mainPanel.add(insertPanel);
@@ -148,7 +156,7 @@ public class StockWatcher implements EntryPoint {
 	    dragController.registerDropController(dropController);
 
 	    // create a few randomly placed draggable labels
-	    for (int i = 1; i <= 5; i++) {
+	 /*   for (int i = 1; i <= 5; i++) {
 	      // create a label and give it style
 	      Label label = new Label("Label #" + i, false);
 	      label.addStyleName("getting-started-label");
@@ -159,7 +167,7 @@ public class StockWatcher implements EntryPoint {
 	      mainPanel.setWidgetPosition(label, 0, 0);
 	      // make the label draggable
 	      dragController.makeDraggable(label);
-	    }
+	    }*/
 	    
 	/*    for(int row = 0; row < investFlexTable.getRowCount(); row++ ){
 
