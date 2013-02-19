@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -35,11 +36,18 @@ public class StockWatcher implements EntryPoint {
 
   private AbsolutePanel mainPanel = new AbsolutePanel();
   private AbsolutePanel targetPanel = new AbsolutePanel();
+  
   private FlexTable investFlexTable = new FlexTable();
   private HorizontalPanel addPanel = new HorizontalPanel();
   private TextBox newCityTextBox = new TextBox();
   private Button addProjectButton = new Button("Add");
   private Label lastUpdatedLabel = new Label();
+ 
+  private HorizontalPanel insertPanel = new HorizontalPanel();
+  private TextArea insertCityTextA = new TextArea();
+  private Button insertProjectButton = new Button("Insert");
+ 
+
   
  //TODO: aqu’ creo que deber’a ser un ArrayList de AwardDatas
   private ArrayList<String> cities = new ArrayList<String>(Arrays.asList(
@@ -78,9 +86,7 @@ public class StockWatcher implements EntryPoint {
 		 elements.add(new AwardDatas(city,zip,ammt,0));
 	 }
 
-	// Create a boundary panel to constrain all drag operations
 
-	    mainPanel.setPixelSize(300, 300);
 	  
 	 // Create table for stock data.
 		 investFlexTable.setText(0, 0, "City");
@@ -100,7 +106,11 @@ public class StockWatcher implements EntryPoint {
 	    addPanel.add(addProjectButton);
 	    addPanel.addStyleName("addPanel");
 	    
-
+	    // Assemble Add Stock panel.
+	    insertCityTextA.setVisibleLines(4);
+	    insertPanel.add(insertCityTextA);
+	    insertPanel.add(insertProjectButton);
+	    insertPanel.addStyleName("addPanel");
 
 	    // Assemble Error panel.
 	    errorMsgLabel.setStyleName("errorMessage");
@@ -110,11 +120,14 @@ public class StockWatcher implements EntryPoint {
 	    // Assemble Main panel.
 	    mainPanel.add(investFlexTable);
 	    mainPanel.add(addPanel);
+	    mainPanel.add(insertPanel);
 	    mainPanel.add(lastUpdatedLabel);
 	  
 	    targetPanel.setPixelSize(300, 200);
 	    targetPanel.addStyleName("getting-started-blue");
+	    
 
+	    
 	    // Add both panels to the root panel
 	    RootPanel.get().add(mainPanel);
 	    RootPanel.get().add(targetPanel);
@@ -172,6 +185,23 @@ public class StockWatcher implements EntryPoint {
       }
     });
     
+    // Listen for mouse events on the Add button.
+    insertProjectButton.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        insertCity();
+      }
+    });
+    
+    
+    // Listen for keyboard events in the input box.
+    insertCityTextA.addKeyPressHandler(new KeyPressHandler() {
+      public void onKeyPress(KeyPressEvent event) {
+        if (event.getCharCode() == KeyCodes.KEY_ENTER) {
+          insertCity();
+        }
+      }
+    });
+    
     //	Widget w = investFlexTable.getWidget(row, 0);
 	
     //	dragController.makeDraggable(w);
@@ -206,20 +236,15 @@ public class StockWatcher implements EntryPoint {
 		      return;
 	    }
 	    
+	    if (awards.contains(city)){
+	    	Window.alert("The inserted city: '" + city + "' is already in the system.");
+		      newCityTextBox.selectAll();
+		      return;
+	    }
+
+	    
 	    //TODO: falta poner los datos en la tabla, para la ciudad que hemos introducido
-	/*    Iterator<Integer> itr_zip = zips.iterator();
-		Iterator<Integer> itr_am = amounts.iterator();
-	
-		Integer zip =0;
-		 Integer ammt=0;
-		  
-		 for(String name:cities){ 
-			 if(name == city){
-				 zip = itr_zip.next();
-				 ammt = itr_am.next();
-			 
-			 }
-		 }*/
+
 		// elements.add(new AwardDatas(city,zip,ammt,0));
 		 
 	    int row = investFlexTable.getRowCount();
@@ -251,7 +276,42 @@ public class StockWatcher implements EntryPoint {
 
 	 // Get the stock price.
 	    refreshWatchList();
+	    newCityTextBox.setText("");
 
+  }
+
+  private void addCity(final String city) {
+	 
+	    int row = investFlexTable.getRowCount();
+	    awards.add(city);
+
+    //	Widget w = investFlexTable.getWidget(row, 0);
+    	
+    //	dragController.makeDraggable(w);
+    	
+	    investFlexTable.setText(row, 0, city);
+	//    investFlexTable.setText(row, 1, ammt.toString());
+	    investFlexTable.setWidget(row, 2, new Label());
+	    investFlexTable.getCellFormatter().addStyleName(row, 1, "watchListNumericColumn");
+		investFlexTable.getCellFormatter().addStyleName(row, 2, "watchListNumericColumn");
+		investFlexTable.getCellFormatter().addStyleName(row, 3, "watchListRemoveColumn");
+
+
+	    // Add a button to remove this stock from the table.
+	    Button removeStockButton = new Button("x");
+	    removeStockButton.addStyleDependentName("remove");
+	    removeStockButton.addClickHandler(new ClickHandler() {
+	      public void onClick(ClickEvent event) {
+	        int removedIndex = awards.indexOf(city);
+	        awards.remove(removedIndex);        
+	        investFlexTable.removeRow(removedIndex + 1);
+	      }
+	    });
+	    investFlexTable.setWidget(row, 3, removeStockButton);
+
+	 // Get the stock price.
+	    refreshWatchList();
+	    newCityTextBox.setText("");
 
   }
 
@@ -259,7 +319,6 @@ public class StockWatcher implements EntryPoint {
    * Generate random stock prices.
    */
   private void refreshWatchList() {
-	  
 	  
 	// Initialize the service proxy.
 	    if (stockPriceSvc == null) {
@@ -283,7 +342,7 @@ public class StockWatcher implements EntryPoint {
 	      }
 
 	      public void onSuccess(AwardDatas[] result) {
-	        updateTable(result);
+	       updateTable(result);
 	      }
 	    };
 
@@ -317,7 +376,7 @@ public class StockWatcher implements EntryPoint {
 	   *
 	   * @param price Stock data for a single row.
 	   */
-	  private void updateTable(AwardDatas ammount) {
+	 private void updateTable(AwardDatas ammount) {
 	    // Make sure the stock is still in the stock table.
 	    if (!awards.contains(ammount.getCity())) {
 	      return;
@@ -349,7 +408,36 @@ public class StockWatcher implements EntryPoint {
 	    changeWidget.setStyleName(changeStyleName);
 	    
 	  }
+	 
+	  private void insertCity( ) {
+		   
+		  final String text = insertCityTextA.getText().toUpperCase().trim();
+		  insertCityTextA.setFocus(true);
+		  String[] result = text.split("\\s");
+		  int size = result.length;
+		  int j= 0;
+		  
+		  if (size <2){
+		    	Window.alert("It must content: CITY AMMOUNT");
+			      return;
+		   }
+		  if (cities.contains(result[j])){
+		    	Window.alert("The city: '" + result[j] + "' is already in the system.");
+			      return;
+		    }
+ 
+		  
+		//	  int zip = Integer.parseInt(result[j+1]);
+			  int ammount = Integer.parseInt(result[j+1]);
+			
+			  elements.add(new AwardDatas(result[j],ammount,0));
+			  addCity(result[j]);
+			  amounts.add(ammount);
+
+		  insertCityTextA.setText("");
+	}
 }
+
 
 
 

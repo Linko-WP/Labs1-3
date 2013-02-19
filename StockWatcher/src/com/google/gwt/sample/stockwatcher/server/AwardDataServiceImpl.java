@@ -32,10 +32,10 @@ public class AwardDataServiceImpl extends RemoteServiceServlet implements
 		Random rnd = new Random();
 
 		    for (int i=0; i<cities.length; i++) {
-		        /*if (cities[i].equals("ERR")) {
+		        if (cities[i].equals("ERR")) {
 		            throw new DelistedException("ERR");
 		          }
-		        */
+		        
 		      double ammount = cities[i].getAmmount() * MAX_AWARD;
 		      double change = ammount * MAX_PRICE_CHANGE * (rnd.nextDouble() * 2f - 1f);
 

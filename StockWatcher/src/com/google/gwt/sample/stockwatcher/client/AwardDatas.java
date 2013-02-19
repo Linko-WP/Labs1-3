@@ -39,7 +39,7 @@ public class AwardDatas implements Serializable {
 	  }
 
 	  public double getChangePercent() {
-	    return 100.0 * this.change / this.ammount;
+	    return 10.0 * this.change / this.ammount;
 	  }
 
 	  public void setCity(String city) {

@@ -43,7 +43,8 @@ body {
 
 /* Add Stock panel */
 .addPanel {
-  margin: 10px 0px 15px 0px;
+  width:45%;
+ 
 }
 
 /* stock list, the Remove button */
