@@ -29,8 +29,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class StockWatcher implements EntryPoint {
 
@@ -47,9 +45,7 @@ public class StockWatcher implements EntryPoint {
   private TextArea insertCityTextA = new TextArea();
   private Button insertProjectButton = new Button("Insert");
  
-
-  
- //TODO: aquí creo que debería ser un ArrayList de AwardDatas
+  // ArrayList de AwardDatas
   private ArrayList<String> cities = new ArrayList<String>(Arrays.asList(
 		  "NEW YORK","WASHINGTON","CHICAGO", "PORTLAND", "BRIDGEPORT", "WESTMINSTER", "DENVER", "AUSTIN", "SAINT PAUL"));
   private ArrayList<Integer> zips = new ArrayList<Integer>(Arrays.asList(
@@ -76,9 +72,9 @@ public class StockWatcher implements EntryPoint {
    */
   public void onModuleLoad() {
 	  
-		 // Con esto a–adimos al arraylist cada una de las ciudades del vector cities
-	  Iterator<Integer> itr_zip = zips.iterator();
-	  Iterator<Integer> itr_am = amounts.iterator();
+	 // Add to the arraylist every city of the cities vector
+	 Iterator<Integer> itr_zip = zips.iterator();
+	 Iterator<Integer> itr_am = amounts.iterator();
 
 	 for(String city:cities){ 
 		 Integer zip = itr_zip.next();
