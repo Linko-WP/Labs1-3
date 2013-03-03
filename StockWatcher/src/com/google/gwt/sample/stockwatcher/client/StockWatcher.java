@@ -1,12 +1,10 @@
 package com.google.gwt.sample.stockwatcher.client;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 
-import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.allen_sauer.gwt.dnd.client.drop.AbsolutePositionDropController;
 import com.allen_sauer.gwt.dnd.client.drop.DropController;
 import com.google.gwt.core.client.EntryPoint;
@@ -19,9 +17,11 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -34,13 +34,11 @@ public class StockWatcher implements EntryPoint {
   private AbsolutePanel mainPanel = new AbsolutePanel();
   private AbsolutePanel targetPanel = new AbsolutePanel();
   
-  private AbsolutePanel dragablePanel = new AbsolutePanel();
   private FlexTable investFlexTable = new FlexTable();
   private HorizontalPanel addPanel = new HorizontalPanel();
   private TextBox newCityTextBox = new TextBox();
   private Button addProjectButton = new Button("Add");
   private Label lastUpdatedLabel = new Label();
-  private Label cityNameTemp = new Label();
  
   private HorizontalPanel insertPanel = new HorizontalPanel();
   private TextArea insertCityTextA = new TextArea();
@@ -63,34 +61,62 @@ public class StockWatcher implements EntryPoint {
   
   //Create a DragController for each logical area where a set of draggable
   // widgets and drop targets will be allowed to interact with one another.
-  PickupDragController dragController = new PickupDragController(mainPanel, true);
+  //PickupDragController dragController = new PickupDragController(RootPanel.get(), true);
+  FlexTableRowDragController dragController = new FlexTableRowDragController(RootPanel.get());
   
   //create a DropController for each drop target on which draggable widgets
   // can be dropped
-  DropController dropController = new AbsolutePositionDropController(dragablePanel);
-  DropController dropController2 = new AbsolutePositionDropController(mainPanel);
+  DropController dropController = new AbsolutePositionDropController(targetPanel);
   
   /**
    * Entry point method.
    */
   public void onModuleLoad() {
 	  
-	 // Add to the arraylist every city of the cities vector
-	 Iterator<Integer> itr_zip = zips.iterator();
-	 Iterator<Integer> itr_am = amounts.iterator();
+	// Set uncaught exception handler
+    GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
+      public void onUncaughtException(Throwable throwable) {
+        String text = "Uncaught exception: ";
+        while (throwable != null) {
+          StackTraceElement[] stackTraceElements = throwable.getStackTrace();
+          text += throwable.toString() + "\n";
+          for (int i = 0; i < stackTraceElements.length; i++) {
+            text += "    at " + stackTraceElements[i] + "\n";
+          }
+          throwable = throwable.getCause();
+          if (throwable != null) {
+            text += "Caused by: ";
+          }
+        }
+        DialogBox dialogBox = new DialogBox(true, false);
+        DOM.setStyleAttribute(dialogBox.getElement(), "backgroundColor", "#ABCDEF");
+        System.err.print(text);
+        text = text.replaceAll(" ", "&nbsp;");
+        dialogBox.setHTML("<pre>" + text + "</pre>");
+        dialogBox.center();
+      }
+    });
+	    
+	  
+	  
+	  
+	// Add to the arraylist every city of the cities vector
+	Iterator<Integer> itr_zip = zips.iterator();
+	Iterator<Integer> itr_am = amounts.iterator();
 
-	 for(String city:cities){ 
-		 Integer zip = itr_zip.next();
-		 Integer ammt = itr_am.next();
-		 elements.add(new AwardDatas(city,zip,ammt,0));
-	 }
+	for(String city:cities){ 
+		Integer zip = itr_zip.next();
+		Integer ammt = itr_am.next();
+		elements.add(new AwardDatas(city,zip,ammt,0));
+	}
 
 	// Create draggable panel
-	 RootPanel.get().setPixelSize(1000, 800);
-	dragablePanel.setPixelSize(600, 100);
+	RootPanel.get().setPixelSize(1001, 801);
+	mainPanel.setPixelSize(1000, 800);
+	targetPanel.setPixelSize(600, 100);
 	
 	// Add style for the draggable panel
-	dragablePanel.addStyleName("watchList");
+	targetPanel.addStyleName("watchList");
 	 
  	// Create table for stock data.
 	investFlexTable.setText(0, 0, "City");
@@ -130,20 +156,18 @@ public class StockWatcher implements EntryPoint {
 	    
     // Assemble Main panel.
     mainPanel.setStyleName("main");
-    mainPanel.add(dragablePanel);	// We add here the dragable zone
     mainPanel.add(investFlexTable);
     mainPanel.add(addPanel);
     mainPanel.add(insertPanel);
     mainPanel.add(lastUpdatedLabel);
   
-    targetPanel.setPixelSize(300, 200);
+    targetPanel.setPixelSize(600, 200);
     targetPanel.addStyleName("getting-started-blue");
     
 
     // Add both panels to the root panel
-    RootPanel.get().add(mainPanel);
     RootPanel.get().add(targetPanel);
-  //  boundaryPanel.add(targetPanel, 10, 10);
+    RootPanel.get().add(mainPanel);
 
 
     // Positioner is always constrained to the boundary panel
@@ -152,7 +176,6 @@ public class StockWatcher implements EntryPoint {
 
     // Allow multiple widgets to be selected at once using CTRL-click
     dragController.setBehaviorMultipleSelection(true);
-
 
     // Don't forget to register each DropController with a DragController
     dragController.registerDropController(dropController);
@@ -209,11 +232,9 @@ public class StockWatcher implements EntryPoint {
         }
       }
     });
-    
-    
+ 
   }
   
-
   
   /**
    * Add cities to FlexTable. Executed when the user clicks the addStockButton or
@@ -254,8 +275,9 @@ public class StockWatcher implements EntryPoint {
 		 
 	    int row = investFlexTable.getRowCount();
 	    awards.add(city);
-
-	    dragController.makeDraggable( cityNameTemp );	// Cada ciudad added se vuelve dragable
+	    
+	    Label cityNameTemp = new Label();
+	    
 	    cityNameTemp.setText(city);
 	    investFlexTable.setWidget(row, 0, cityNameTemp);
 	//    investFlexTable.setText(row, 1, ammt.toString());
@@ -281,6 +303,8 @@ public class StockWatcher implements EntryPoint {
 	    refreshWatchList();
 	    newCityTextBox.setText("");
 
+	    dragController.makeDraggable( cityNameTemp );	// Cada ciudad added se vuelve dragable
+
   }
 
   private void addCity(final String city) {
@@ -294,6 +318,7 @@ public class StockWatcher implements EntryPoint {
     	
 	    //investFlexTable.setText(row, 0, city);
 	    
+	    Label cityNameTemp = new Label();
 	    cityNameTemp.setText(city);
 	    investFlexTable.setWidget(row, 0, cityNameTemp);
 	    
