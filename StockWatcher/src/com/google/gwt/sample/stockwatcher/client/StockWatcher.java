@@ -14,6 +14,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -287,8 +289,8 @@ public class StockWatcher implements EntryPoint {
 	  investFlexTable.getCellFormatter().addStyleName(row, 3, "watchListRemoveColumn");
 
 	  // Add a click listener to save the information about the row
-	  cityName.addClickHandler(new ClickHandler() {
-	      public void onClick(ClickEvent event) {
+	  cityName.addMouseDownHandler(new MouseDownHandler() {
+	      public void onMouseDown(MouseDownEvent event) {
 	        currentCity.setCity(city);
 	        currentCity.setAmmount(10);
 	      }
