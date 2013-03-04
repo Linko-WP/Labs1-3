@@ -280,7 +280,6 @@ public class StockWatcher implements EntryPoint {
 	    
 	    cityNameTemp.setText(city);
 	    investFlexTable.setWidget(row, 0, cityNameTemp);
-	//    investFlexTable.setText(row, 1, ammt.toString());
 	    investFlexTable.setWidget(row, 2, new Label());
 	    investFlexTable.getCellFormatter().addStyleName(row, 1, "watchListNumericColumn");
 		investFlexTable.getCellFormatter().addStyleName(row, 2, "watchListNumericColumn");
@@ -307,22 +306,19 @@ public class StockWatcher implements EntryPoint {
 
   }
 
+  /**
+   * Add cities to FlexTable. Executed when the user clicks the insertStockButton or
+   * presses enter in the newSymbolTextBox.
+   * */
   private void addCity(final String city) {
 	 
 	    int row = investFlexTable.getRowCount();
 	    awards.add(city);
-
-    //	Widget w = investFlexTable.getWidget(row, 0);
-    	
-    //	dragController.makeDraggable(w);
-    	
-	    //investFlexTable.setText(row, 0, city);
 	    
 	    Label cityNameTemp = new Label();
 	    cityNameTemp.setText(city);
 	    investFlexTable.setWidget(row, 0, cityNameTemp);
 	    
-	//  investFlexTable.setText(row, 1, ammt.toString());
 	    investFlexTable.setWidget(row, 2, new Label());
 	    investFlexTable.getCellFormatter().addStyleName(row, 1, "watchListNumericColumn");
 		investFlexTable.getCellFormatter().addStyleName(row, 2, "watchListNumericColumn");
@@ -442,32 +438,33 @@ public class StockWatcher implements EntryPoint {
 	    
 	  }
 	 
-	  private void insertCity( ) {
-		   
-		  final String text = insertCityTextA.getText().toUpperCase().trim();
-		  insertCityTextA.setFocus(true);
-		  String[] result = text.split("\\s");
-		  int size = result.length;
-		  int j= 0;
-		  
-		  if (size <2){
-		    	Window.alert("It must content: CITY AMMOUNT");
-			      return;
-		  }
-		  if (cities.contains(result[j])){
-		    	Window.alert("The city: '" + result[j] + "' is already in the system.");
-			      return;
-		  }
- 
-		  
-	//	  int zip = Integer.parseInt(result[j+1]);
-		  int ammount = Integer.parseInt(result[j+1]);
-		
-		  elements.add(new AwardDatas(result[j],ammount,0));
-		  addCity(result[j]);
-		  amounts.add(ammount);
-
-		  insertCityTextA.setText("");
+	/**
+	 * Inserts a new City on the table that didn't exists until now
+	 * */
+	 private void insertCity( ) {
+	   
+	  final String text = insertCityTextA.getText().toUpperCase().trim();
+	  insertCityTextA.setFocus(true);
+	  String[] result = text.split("\\s");
+	  int size = result.length;
+	  int j= 0;
+	  
+	  if (size <2){
+	    	Window.alert("It must content: CITY AMMOUNT");
+		      return;
+	  }
+	  if (cities.contains(result[j])){
+	    	Window.alert("The city: '" + result[j] + "' is already in the system.");
+		      return;
+	  }
+ 		  
+//	  int zip = Integer.parseInt(result[j+1]);
+	  int ammount = Integer.parseInt(result[j+1]);
+	
+	  elements.add(new AwardDatas(result[j],ammount,0));
+	  addCity(result[j]);
+	  amounts.add(ammount);
+	  insertCityTextA.setText("");
 	}
 }
 
