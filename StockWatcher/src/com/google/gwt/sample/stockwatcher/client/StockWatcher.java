@@ -55,6 +55,7 @@ public class StockWatcher implements EntryPoint {
   // Arraylist of AwardDatas
   private ArrayList<AwardDatas> elements = new ArrayList<AwardDatas>();
   private ArrayList<String> awards = new ArrayList<String>();
+  public AwardDatas currentCity = new AwardDatas();
   private static final int REFRESH_INTERVAL = 5000; // ms
   private AwardDataServiceAsync stockPriceSvc = GWT.create(AwardDataService.class);
   private Label errorMsgLabel = new Label();
@@ -66,7 +67,8 @@ public class StockWatcher implements EntryPoint {
   
   //create a DropController for each drop target on which draggable widgets
   // can be dropped
-  DropController dropController = new AbsolutePositionDropController(targetPanel);
+  //DropController dropController = new AbsolutePositionDropController(targetPanel);
+  FlexTableRowDropController dropController = new FlexTableRowDropController(targetPanel, this);
   
   /**
    * Entry point method.
@@ -180,25 +182,6 @@ public class StockWatcher implements EntryPoint {
     // Don't forget to register each DropController with a DragController
     dragController.registerDropController(dropController);
 
-	// create a few randomly placed draggable labels
-/*  for (int i = 1; i <= 5; i++) {
-      // create a label and give it style
-      Label label = new Label("Label #" + i, false);
-      label.addStyleName("getting-started-label");
-
-      // add it to the DOM so that offset width/height becomes available
-      mainPanel.add(label, 0, 0);
-      // move the label
-      mainPanel.setWidgetPosition(label, 0, 0);
-      // make the label draggable
-      dragController.makeDraggable(label);
-	}*/
-	    
-/*   for(int row = 0; row < investFlexTable.getRowCount(); row++ ){
-
-    	Widget w = investFlexTable.getWidget(row, 0);
-    	dragController.makeDraggable(w);
-	}*/
   // refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
 
     // Listen for mouse events on the Add button.
@@ -240,21 +223,10 @@ public class StockWatcher implements EntryPoint {
    * Add cities to FlexTable. Executed when the user clicks the addStockButton or
    * presses enter in the newSymbolTextBox.
    */
-  private void addCity( ) {
-	  final String city = newCityTextBox.getText().toUpperCase().trim();
+  private void addCity() {
+	  	final String city = newCityTextBox.getText().toUpperCase().trim();
 	 
-	  newCityTextBox.setFocus(true);
-	
-	  // Stock code must be between 1 and 10 chars that are numbers, letters, or dots.
-	/*    if (!city.matches("^[0-9A-Z\\.]{1,100}$")) {
-		      Window.alert("'" + city + "' is not a valid city.");
-		      newCityTextBox.selectAll();
-		      return;
-	      }
-	
-	    newCityTextBox.setText("");
-	    
-	    */
+	  	newCityTextBox.setFocus(true);
 	    
 		if (!cities.contains(city)){
 			Window.alert("The inserted city: '" + city + "' is not a valid city.");
@@ -267,82 +239,73 @@ public class StockWatcher implements EntryPoint {
 		      newCityTextBox.selectAll();
 		      return;
 		}
+		
+		// Add the city data
+	    addDataToSource(city);
 
-	    
-	    //TODO: falta poner los datos en la tabla, para la ciudad que hemos introducido
-
-		// elements.add(new AwardDatas(city,zip,ammt,0));
-		 
-	    int row = investFlexTable.getRowCount();
-	    awards.add(city);
-	    
-	    Label cityNameTemp = new Label();
-	    
-	    cityNameTemp.setText(city);
-	    investFlexTable.setWidget(row, 0, cityNameTemp);
-	    investFlexTable.setWidget(row, 2, new Label());
-	    investFlexTable.getCellFormatter().addStyleName(row, 1, "watchListNumericColumn");
-		investFlexTable.getCellFormatter().addStyleName(row, 2, "watchListNumericColumn");
-		investFlexTable.getCellFormatter().addStyleName(row, 3, "watchListRemoveColumn");
-
-
-	    // Add a button to remove this stock from the table.
-	    Button removeStockButton = new Button("x");
-	    removeStockButton.addStyleDependentName("remove");
-	    removeStockButton.addClickHandler(new ClickHandler() {
-	      public void onClick(ClickEvent event) {
-	        int removedIndex = awards.indexOf(city);
-	        awards.remove(removedIndex);        
-	        investFlexTable.removeRow(removedIndex + 1);
-	      }
-	    });
-	    investFlexTable.setWidget(row, 3, removeStockButton);
-
-	 // Get the stock price.
+	    // Get the stock price.
 	    refreshWatchList();
 	    newCityTextBox.setText("");
-
-	    dragController.makeDraggable( cityNameTemp );	// Cada ciudad added se vuelve dragable
 
   }
 
   /**
-   * Add cities to FlexTable. Executed when the user clicks the insertStockButton or
+   * Insert cities to FlexTable. Executed when the user clicks the insertStockButton or
    * presses enter in the newSymbolTextBox.
    * */
   private void addCity(final String city) {
 	 
-	    int row = investFlexTable.getRowCount();
-	    awards.add(city);
-	    
-	    Label cityNameTemp = new Label();
-	    cityNameTemp.setText(city);
-	    investFlexTable.setWidget(row, 0, cityNameTemp);
-	    
-	    investFlexTable.setWidget(row, 2, new Label());
-	    investFlexTable.getCellFormatter().addStyleName(row, 1, "watchListNumericColumn");
-		investFlexTable.getCellFormatter().addStyleName(row, 2, "watchListNumericColumn");
-		investFlexTable.getCellFormatter().addStyleName(row, 3, "watchListRemoveColumn");
+	    addDataToSource(city);
 
-
-	    // Add a button to remove this stock from the table.
-	    Button removeStockButton = new Button("x");
-	    removeStockButton.addStyleDependentName("remove");
-	    removeStockButton.addClickHandler(new ClickHandler() {
-	      public void onClick(ClickEvent event) {
-	        int removedIndex = awards.indexOf(city);
-	        awards.remove(removedIndex);        
-	        investFlexTable.removeRow(removedIndex + 1);
-	      }
-	    });
-	    investFlexTable.setWidget(row, 3, removeStockButton);
-
-	 // Get the stock price.
+	    // Get the stock price.
 	    refreshWatchList();
 	    newCityTextBox.setText("");
 	    
-	    dragController.makeDraggable(newCityTextBox);	// Cada ciudad added se vuelve dragable	
+  }
+  
+  /**
+   * Insert data on the source table
+   * */
+  private void addDataToSource(final String city){
+	  
+	  int row = investFlexTable.getRowCount();
+	  awards.add(city);
+	    
+	  HorizontalPanel nameParentPanel = new HorizontalPanel();
+	  final Label cityName = new Label(city);
+	  nameParentPanel.add(cityName);
+	  investFlexTable.setWidget(row, 0, nameParentPanel);
+	  dragController.makeDraggable(cityName);	// Cada ciudad added se vuelve dragable
+	  
+	  final Label amount = new Label();
+	  investFlexTable.setWidget(row, 2, amount);
+	  dragController.makeDraggable(amount);
+	  
+	  // Style
+	  investFlexTable.getCellFormatter().addStyleName(row, 1, "watchListNumericColumn");
+	  investFlexTable.getCellFormatter().addStyleName(row, 2, "watchListNumericColumn");
+	  investFlexTable.getCellFormatter().addStyleName(row, 3, "watchListRemoveColumn");
 
+	  // Add a click listener to save the information about the row
+	  cityName.addClickHandler(new ClickHandler() {
+	      public void onClick(ClickEvent event) {
+	        currentCity.setCity(city);
+	        currentCity.setAmmount(10);
+	      }
+	    });
+
+	  // Add a button to remove this stock from the table.
+	  Button removeStockButton = new Button("x");
+	  removeStockButton.addStyleDependentName("remove");
+	  removeStockButton.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
+	      int removedIndex = awards.indexOf(city);
+	      awards.remove(removedIndex);        
+	      investFlexTable.removeRow(removedIndex + 1);
+	    }
+	  });
+	  investFlexTable.setWidget(row, 3, removeStockButton);
+	  
   }
 
 	/**
@@ -458,7 +421,6 @@ public class StockWatcher implements EntryPoint {
 		      return;
 	  }
  		  
-//	  int zip = Integer.parseInt(result[j+1]);
 	  int ammount = Integer.parseInt(result[j+1]);
 	
 	  elements.add(new AwardDatas(result[j],ammount,0));

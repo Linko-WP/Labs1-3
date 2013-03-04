@@ -1,0 +1,2 @@
+serviceClass: com.google.gwt.sample.stockwatcher.client.AwardDataService
+path: 37DFAD79CCE56617716C64A94971D0D1.gwt.rpc
