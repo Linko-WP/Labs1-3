@@ -2,7 +2,7 @@ package com.google.gwt.sample.stockwatcher.client;
 
 import java.io.Serializable;
 
-public class AwardDatas implements Serializable {
+public class InvestData implements Serializable {
 	
 	  private String city;
 	//TODO : insertar el projecto en todas las funciones (si hay tiempo)
@@ -10,16 +10,16 @@ public class AwardDatas implements Serializable {
 	  private double ammount;
 	  private double change;
 
-	  public AwardDatas() {
+	  public InvestData() {
 	  }
 
-	  public AwardDatas(String city, double ammount, double change) {
+	  public InvestData(String city, double ammount, double change) {
 	    this.city = city;
 	    this.ammount = ammount;
 	    this.change = change;
 	  }
 	  
-	  public AwardDatas(String city, double zip,  double ammount, double change) {
+	  public InvestData(String city, double zip,  double ammount, double change) {
 		    this.city = city;
 		    this.org_zip = zip;
 		    this.ammount = ammount;

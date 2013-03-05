@@ -3,23 +3,23 @@ package com.google.gwt.sample.stockwatcher.server;
 
 import java.util.Random;
 
-import com.google.gwt.sample.stockwatcher.client.AwardDataService;
-import com.google.gwt.sample.stockwatcher.client.AwardDatas;
+import com.google.gwt.sample.stockwatcher.client.InvestDataService;
+import com.google.gwt.sample.stockwatcher.client.InvestData;
 import com.google.gwt.sample.stockwatcher.client.DelistedException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class AwardDataServiceImpl extends RemoteServiceServlet implements
-		AwardDataService {
+public class InvestDataServiceImpl extends RemoteServiceServlet implements
+		InvestDataService {
 
 	private static final double MAX_AWARD= 50.0; // $100.00
 	private static final double MAX_PRICE_CHANGE = 10; // +/- 2%
 	  
 	
 	@Override
-	public AwardDatas[] getCities(AwardDatas[] cities) throws DelistedException{
+	public InvestData[] getCities(InvestData[] cities) throws DelistedException{
 		
 		
-		AwardDatas[] ammounts = new AwardDatas[cities.length];
+		InvestData[] ammounts = new InvestData[cities.length];
 
 		Random rnd = new Random();
 
@@ -31,7 +31,7 @@ public class AwardDataServiceImpl extends RemoteServiceServlet implements
 		      double ammount = cities[i].getAmmount() * MAX_AWARD;
 		      double change = (MAX_PRICE_CHANGE * (rnd.nextDouble() * 2f - 1f));
 
-		      ammounts[i] = new AwardDatas(cities[i].getCity(), cities[i].getAmmount(), change);
+		      ammounts[i] = new InvestData(cities[i].getCity(), cities[i].getAmmount(), change);
 		    }
 
 		    return ammounts;

@@ -1,0 +1,2 @@
+serviceClass: com.google.gwt.sample.stockwatcher.client.InvestDataService
+path: F967C3E24F7ABA9739F08133B97A5476.gwt.rpc

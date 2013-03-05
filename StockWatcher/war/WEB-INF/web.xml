@@ -19,7 +19,7 @@
 <!-- Servlets -->
   <servlet>
     <servlet-name>AwardDataServiceImpl</servlet-name>
-    <servlet-class>com.google.gwt.sample.stockwatcher.server.AwardDataServiceImpl</servlet-class>
+    <servlet-class>com.google.gwt.sample.stockwatcher.server.InvestDataServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>

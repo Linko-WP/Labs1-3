@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 
-import com.allen_sauer.gwt.dnd.client.drop.AbsolutePositionDropController;
-import com.allen_sauer.gwt.dnd.client.drop.DropController;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -47,6 +45,17 @@ public class StockWatcher implements EntryPoint {
   private Button insertProjectButton = new Button("Insert");
  
   // Initial elements
+  private ArrayList<InvestData> initial_elements = new ArrayList<InvestData>(Arrays.asList(
+		  new InvestData("NEW YORK",10027,5000000),
+		  new InvestData("WASHINGTON",20009,3968339),
+		  new InvestData("CHICAGO",60634,4999553),
+		  new InvestData("PORTLAND",97209,6170483),
+		  new InvestData("BRIDGEPORT",6604,4999998),
+		  new InvestData("WESTMINSTER",80234,5000000),
+		  new InvestData("DENVER",80229,4999280),
+		  new InvestData("AUSTIN",20009,3968339),
+		  new InvestData("SAINT PAUL",20009,3968339)));
+  
   private ArrayList<String> cities = new ArrayList<String>(Arrays.asList(
 		  "NEW YORK","WASHINGTON","CHICAGO", "PORTLAND", "BRIDGEPORT", "WESTMINSTER", "DENVER", "AUSTIN", "SAINT PAUL"));
   private ArrayList<Integer> zips = new ArrayList<Integer>(Arrays.asList(
@@ -54,12 +63,12 @@ public class StockWatcher implements EntryPoint {
   private ArrayList<Integer> amounts = new ArrayList<Integer>(Arrays.asList(
 		  5000000,3968339,4999553,6170483,4999998,5000000,4999280,4135000,5000000));
   
-  // Arraylist of AwardDatas
-  private ArrayList<AwardDatas> elements = new ArrayList<AwardDatas>();
+  // Arraylist of InvestData
+  private ArrayList<InvestData> elements = new ArrayList<InvestData>();
   private ArrayList<String> awards = new ArrayList<String>();
-  public AwardDatas currentCity = new AwardDatas();
+  public InvestData currentCity = new InvestData();
   private static final int REFRESH_INTERVAL = 5000; // ms
-  private AwardDataServiceAsync stockPriceSvc = GWT.create(AwardDataService.class);
+  private InvestDataServiceAsync stockPriceSvc = GWT.create(InvestDataService.class);
   private Label errorMsgLabel = new Label();
   
   //Create a DragController for each logical area where a set of draggable
@@ -111,7 +120,7 @@ public class StockWatcher implements EntryPoint {
 	for(String city:cities){ 
 		Integer zip = itr_zip.next();
 		Integer ammt = itr_am.next();
-		elements.add(new AwardDatas(city,zip,ammt,0));
+		elements.add(new InvestData(city,zip,ammt,0));
 	}
 
 	// Create draggable panel
@@ -292,12 +301,8 @@ public class StockWatcher implements EntryPoint {
 	  cityName.addMouseDownHandler(new MouseDownHandler() {
 	      public void onMouseDown(MouseDownEvent event) {
 	        currentCity.setCity(city);
-	        if (awards.contains(city)) {
-	        	int row = awards.indexOf(city);
-	        	currentCity.setAmmount( amounts.get(row) );
-	  	    }else{
-	  	    	currentCity.setAmmount(10);
-	  	    }
+	        int row = cities.indexOf(city);
+	        currentCity.setAmmount( amounts.get(row) );
 	      }
 	    });
 
@@ -322,11 +327,11 @@ public class StockWatcher implements EntryPoint {
 		  
 		// Initialize the service proxy.
 		if (stockPriceSvc == null) {
-		  stockPriceSvc = GWT.create(AwardDataService.class);
+		  stockPriceSvc = GWT.create(InvestDataService.class);
 		}
 	
 		// Set up the callback object.
-		AsyncCallback<AwardDatas[]> callback = new AsyncCallback<AwardDatas[]>() {
+		AsyncCallback<InvestData[]> callback = new AsyncCallback<InvestData[]>() {
 			
 			public void onFailure(Throwable caught) {
 				  
@@ -340,14 +345,14 @@ public class StockWatcher implements EntryPoint {
 				    errorMsgLabel.setVisible(true);
 				}
 			
-				public void onSuccess(AwardDatas[] result) {
+				public void onSuccess(InvestData[] result) {
 					updateTable(result);
 				}
 		};
 	
 	// Make the call to the stock price service.
 	//TODO: que muestre los valores apropiados
-	    AwardDatas [] elem = elements.toArray(new AwardDatas[elements.size()]);
+	    InvestData [] elem = elements.toArray(new InvestData[elements.size()]);
 	    stockPriceSvc.getCities(elem, callback);
 	    
 	  }
@@ -357,7 +362,7 @@ public class StockWatcher implements EntryPoint {
 	   *
 	   * @param prices Stock data for all rows.
 	   */
-	  private void updateTable(AwardDatas[] prices) {
+	  private void updateTable(InvestData[] prices) {
 	    for (int i = 0; i < prices.length; i++) {
 	      updateTable(prices[i]);
 	    }
@@ -375,7 +380,7 @@ public class StockWatcher implements EntryPoint {
 	   *
 	   * @param price Stock data for a single row.
 	   */
-	 private void updateTable(AwardDatas ammount) {
+	 private void updateTable(InvestData ammount) {
 	    // Make sure the stock is still in the stock table.
 	    if (!awards.contains(ammount.getCity())) {
 	      return;
@@ -430,7 +435,7 @@ public class StockWatcher implements EntryPoint {
  		  
 	  int ammount = Integer.parseInt(result[j+1]);
 	
-	  elements.add(new AwardDatas(result[j],ammount,0));
+	  elements.add(new InvestData(result[j],ammount,0));
 	  addCity(result[j]);
 	  amounts.add(ammount);
 	  insertCityTextA.setText("");
