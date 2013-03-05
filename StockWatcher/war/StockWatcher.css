@@ -20,7 +20,7 @@
 
 /* stock list flex table */
 .watchList {
-  width:45%;
+  width:98%;
   border: 1px solid silver;
   padding: 2px;
   margin-bottom:6px;
@@ -41,10 +41,6 @@
 .textBox{
   width:300px;
 
-}
-
-.main{
-	
 }
 
 .addPanel{
@@ -78,4 +74,17 @@
 
 .graphic_bars{
 	background-color: blue;
+}
+
+.mainStyle{
+	
+}
+
+.targetStyle{
+	width: 95%;
+	float: right;
+}
+
+.rootStyle{
+	margin: auto;
 }

@@ -66,10 +66,10 @@ public class StockWatcher implements EntryPoint {
   // Arraylist of InvestData
   private ArrayList<InvestData> elements = new ArrayList<InvestData>();
   private ArrayList<String> awards = new ArrayList<String>();
-  public InvestData currentCity = new InvestData();
   private static final int REFRESH_INTERVAL = 5000; // ms
   private InvestDataServiceAsync stockPriceSvc = GWT.create(InvestDataService.class);
   private Label errorMsgLabel = new Label();
+  public InvestData currentCity = new InvestData();
   
   //Create a DragController for each logical area where a set of draggable
   // widgets and drop targets will be allowed to interact with one another.
@@ -124,12 +124,17 @@ public class StockWatcher implements EntryPoint {
 	}
 
 	// Create draggable panel
-	RootPanel.get().setPixelSize(1001, 801);
-	mainPanel.setPixelSize(1000, 800);
-	targetPanel.setPixelSize(600, 100);
+	RootPanel.get().setPixelSize(1000, 800);
+	mainPanel.setPixelSize(495, 800);
+	targetPanel.setPixelSize(495, 200);
 	
 	// Add style for the draggable panel
+	RootPanel.get().addStyleName("rootStyle");
+	mainPanel.addStyleName("mainStyle");
+	targetPanel.addStyleName("targetStyle");
 	targetPanel.addStyleName("watchList");
+    targetPanel.addStyleName("getting-started-blue");
+
 	 
  	// Create table for stock data.
 	investFlexTable.setText(0, 0, "City");
@@ -173,10 +178,7 @@ public class StockWatcher implements EntryPoint {
     mainPanel.add(addPanel);
     mainPanel.add(insertPanel);
     mainPanel.add(lastUpdatedLabel);
-  
-    targetPanel.setPixelSize(600, 200);
-    targetPanel.addStyleName("getting-started-blue");
-    
+      
 
     // Add both panels to the root panel
     RootPanel.get().add(targetPanel);
