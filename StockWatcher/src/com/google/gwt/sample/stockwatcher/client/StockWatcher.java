@@ -292,7 +292,12 @@ public class StockWatcher implements EntryPoint {
 	  cityName.addMouseDownHandler(new MouseDownHandler() {
 	      public void onMouseDown(MouseDownEvent event) {
 	        currentCity.setCity(city);
-	        currentCity.setAmmount(10);
+	        if (awards.contains(city)) {
+	        	int row = awards.indexOf(city);
+	        	currentCity.setAmmount( amounts.get(row) );
+	  	    }else{
+	  	    	currentCity.setAmmount(10);
+	  	    }
 	      }
 	    });
 
