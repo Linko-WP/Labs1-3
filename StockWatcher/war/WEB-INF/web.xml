@@ -40,5 +40,17 @@
     <servlet-name>SystemServiceServlet</servlet-name>
     <url-pattern>/_ah/spi/*</url-pattern>
   </servlet-mapping>
+  
+  <!-- Example servlet loaded into servlet container -->
+	<servlet>
+	  <servlet-name>myServiceImpl</servlet-name>
+	  <servlet-class>
+	    com.google.gwt.sample.stockwatcher.server.MyServiceImpl
+	  </servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>myServiceImpl</servlet-name>
+	  <url-pattern>/com.google.gwt.sample.stockwatcher/myService</url-pattern>
+	</servlet-mapping>
 
 </web-app>

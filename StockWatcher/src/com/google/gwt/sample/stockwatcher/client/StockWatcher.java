@@ -234,7 +234,7 @@ public class StockWatcher implements EntryPoint {
  
     
     
-    
+    /*
  // (1) Create the client proxy. Note that although you are creating the
     // service interface proper, you cast the result to the asynchronous
     // version of the interface. The cast is always safe because the
@@ -266,7 +266,31 @@ public class StockWatcher implements EntryPoint {
     // 'callback' will be invoked when the RPC completes.
     //
     emailService.testSQL(callback);
-    
+    */
+ // (1) Create the client proxy. Note that although you are creating the
+    // service interface proper, you cast the result to the asynchronous
+    // version of the interface. The cast is always safe because the
+    // generated proxy implements the asynchronous interface automatically.
+    //
+    MyServiceAsync emailService = (MyServiceAsync) GWT.create(MyService.class);
+
+    String temp = " cadena ";
+    System.out.println(temp);
+    emailService.myMethod(temp, new AsyncCallback<String>(){
+    	public void onSuccess(String result) {
+            // do some UI stuff to show success
+    		System.out.println("Success");
+    		System.out.println(result);
+          }
+
+          public void onFailure(Throwable caught) {
+            // do some UI stuff to show failure
+        	Window.alert("RPC to sendEmail() failed.");
+      		System.out.println("Fail");
+          }
+    } );
+    System.out.println(temp);
+
     
     
     
