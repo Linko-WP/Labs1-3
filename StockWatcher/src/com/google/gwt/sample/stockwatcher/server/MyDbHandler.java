@@ -2,13 +2,21 @@ package com.google.gwt.sample.stockwatcher.server;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.mysql.jdbc.*;
 
+import com.google.gwt.sample.stockwatcher.client.MyDbHandlerInterface;
 
+public class MyDbHandler implements MyDbHandlerInterface{
 
-public class MyDbHandler {
-
+	@Override
+	public void MyDbHandler() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/** Test function */
 	public String testSQL() {
 	      String str = "Result: ";
 	      try {

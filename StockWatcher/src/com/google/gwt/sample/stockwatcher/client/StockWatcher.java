@@ -29,8 +29,12 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 
+import com.google.gwt.sample.stockwatcher.client.MyDbHandlerInterface;
+
 public class StockWatcher implements EntryPoint {
 
+  private MyDbHandlerInterface db_handler = new MyDbHandlerInterface();
+  
   private AbsolutePanel mainPanel = new AbsolutePanel();
   private AbsolutePanel targetPanel = new AbsolutePanel();
   
@@ -184,7 +188,12 @@ public class StockWatcher implements EntryPoint {
     RootPanel.get().add(targetPanel);
     RootPanel.get().add(mainPanel);
 
+    // Prueba de la base de datos
+    String temp = db_handler.testSQL();
+    Label tmp = new Label(temp);
+    RootPanel.get().add(tmp);
 
+    
     // Positioner is always constrained to the boundary panel
     // Use 'true' to also constrain the draggable or drag proxy to the boundary panel
     dragController.setBehaviorConstrainedToBoundaryPanel(false);
