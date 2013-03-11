@@ -232,6 +232,44 @@ public class StockWatcher implements EntryPoint {
       }
     });
  
+    
+    
+    
+ // (1) Create the client proxy. Note that although you are creating the
+    // service interface proper, you cast the result to the asynchronous
+    // version of the interface. The cast is always safe because the
+    // generated proxy implements the asynchronous interface automatically.
+    //
+    GreetingServiceAsync emailService = (GreetingServiceAsync) GWT.create(GreetingService.class);
+
+    // (2) Create an asynchronous callback to handle the result.
+    //
+    AsyncCallback callback = new AsyncCallback() {
+      public void onSuccess(Void result) {
+        // do some UI stuff to show success
+    	  System.out.println("SUccessSSSSSSSSSS later");
+      }
+
+      public void onFailure(Throwable caught) {
+        // do some UI stuff to show failure
+    	  System.out.println("Failure!!!!!!!!");
+      }
+
+	@Override
+	public void onSuccess(Object result) {
+		// TODO Auto-generated method stub
+		System.out.println("SUccessSSSSSSSSSS");
+	}
+    };
+
+    // (3) Make the call. Control flow will continue immediately and later
+    // 'callback' will be invoked when the RPC completes.
+    //
+    emailService.testSQL(callback);
+    
+    
+    
+    
   }
   
   
