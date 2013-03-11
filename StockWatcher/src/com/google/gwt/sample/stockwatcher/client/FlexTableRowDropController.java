@@ -32,6 +32,8 @@ public class FlexTableRowDropController extends AbstractDropController{
 		temp.setStyleName("graphic_bars");
 		temp.setText(" .");
 		target.add(temp);
+		
 	}
+
 	
 }
