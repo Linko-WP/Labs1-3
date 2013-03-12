@@ -15,16 +15,12 @@ public class MyServiceImpl extends RemoteServiceServlet implements MyService {
 	 */
 	private static final long serialVersionUID = 7081621504101146086L;
 
-public String myMethod(String s) {
-    // Do something interesting with 's' here on the server.
+	public String myMethod(String s) {
+		// Do something interesting with 's' here on the server.
 	  
-	
 	  String str = "Result: ";
+	  Connection conn = connect();	// Connect to database
 	  try {
-	     Class.forName("com.mysql.jdbc.Driver");
-	 	 Connection conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/db_lab3?" +
-	                      "user=invitado&password=invipass");
-	
 	     Statement stat = (Statement) conn.createStatement();
 	     stat.executeUpdate("drop table if exists people;");
 	
@@ -47,9 +43,43 @@ public String myMethod(String s) {
 	     str += e.toString();
 	     e.printStackTrace();
 	  } 
-	      
-	
 	
     return str;
   }
+
+	/**										*
+	 * Connects to local database db_lab3	*
+	 * 										*/
+	private Connection connect(){
+		
+		Connection conn = null;
+		String url = "jdbc:mysql://localhost:3306/";
+		String dbName = "db_lab3";
+		String driver = "com.mysql.jdbc.Driver";
+		String userName = "invitado"; 
+		String password = "invipass";
+		try {
+			Class.forName(driver).newInstance();
+			conn = (Connection) DriverManager.getConnection(url+dbName,userName,password);
+			System.out.println("Connected to the database");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return conn;
+	}
+	
+	/**									*
+	 * Disconnects from local database	*
+	 * 									*/
+	private void disconnect(Connection conn){
+		
+		try {
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 }
