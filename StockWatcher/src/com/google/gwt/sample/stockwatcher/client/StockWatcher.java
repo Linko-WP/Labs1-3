@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.mortbay.log.Log;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -287,6 +289,7 @@ public class StockWatcher implements EntryPoint {
             // do some UI stuff to show failure
         	Window.alert("RPC to sendEmail() failed.");
       		System.out.println("Fail");
+      		System.out.println(caught);
           }
     } );
     System.out.println(temp);

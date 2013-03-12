@@ -8,8 +8,18 @@
   
   <servlet-mapping>
     <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/awardwatcher/greet</url-pattern>
+    <url-pattern>/stockwatcher/greet</url-pattern>
   </servlet-mapping>
+  
+  <!-- Example servlet loaded into servlet container -->
+	<servlet>
+	  <servlet-name>myServiceImpl</servlet-name>
+	  <servlet-class>com.google.gwt.sample.stockwatcher.server.MyServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>myServiceImpl</servlet-name>
+	  <url-pattern>/stockwatcher/ms</url-pattern>
+	</servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>
@@ -40,17 +50,5 @@
     <servlet-name>SystemServiceServlet</servlet-name>
     <url-pattern>/_ah/spi/*</url-pattern>
   </servlet-mapping>
-  
-  <!-- Example servlet loaded into servlet container -->
-	<servlet>
-	  <servlet-name>myServiceImpl</servlet-name>
-	  <servlet-class>
-	    com.google.gwt.sample.stockwatcher.server.MyServiceImpl
-	  </servlet-class>
-	</servlet>
-	<servlet-mapping>
-	  <servlet-name>myServiceImpl</servlet-name>
-	  <url-pattern>/com.google.gwt.sample.stockwatcher/myService</url-pattern>
-	</servlet-mapping>
 
 </web-app>
