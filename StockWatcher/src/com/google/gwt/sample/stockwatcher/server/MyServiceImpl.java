@@ -16,6 +16,37 @@ public class MyServiceImpl extends RemoteServiceServlet implements MyService {
 	 */
 	private static final long serialVersionUID = 7081621504101146086L;
 
+	/**
+	 * Inserts a row into a table of the database
+	 * @param table	String contaning the name of the table
+	 * @param values String of Values inside () separated by comma
+	 * */
+	public String insert_into_db(String table, String values) {
+	  
+	  String str = "Result: ";
+	  Connection conn = connect();	// Connect to database
+	  try {
+		  
+	     PreparedStatement prep = (PreparedStatement) conn
+	           .prepareStatement("insert into "+ table +" values "+ values +";");
+	     prep.execute();
+	     
+	     str += " Good";
+	     
+	  } catch (Exception e) {
+	     str += e.toString();
+	     e.printStackTrace();
+	  } 
+	
+	  disconnect(conn);
+	  
+    return str;
+  }
+	
+	/**
+	 * Initializes the database with some default values for the table of cities
+	 * @param s String Not needed 
+	 * */
 	public String initialize_db(String s) {
 		// Do something interesting with 's' here on the server.
 	  
