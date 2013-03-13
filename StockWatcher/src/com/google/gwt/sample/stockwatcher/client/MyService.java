@@ -5,5 +5,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("ms")
 public interface MyService extends RemoteService {
-  public String myMethod(String s);
+  public String initialize_db(String s);
 }

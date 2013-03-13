@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.gwt.sample.stockwatcher.client.InvestData;
 import com.google.gwt.sample.stockwatcher.client.MyService;
 import com.mysql.jdbc.*;
 
@@ -15,35 +16,52 @@ public class MyServiceImpl extends RemoteServiceServlet implements MyService {
 	 */
 	private static final long serialVersionUID = 7081621504101146086L;
 
-	public String myMethod(String s) {
+	public String initialize_db(String s) {
 		// Do something interesting with 's' here on the server.
 	  
 	  String str = "Result: ";
 	  Connection conn = connect();	// Connect to database
 	  try {
 	     Statement stat = (Statement) conn.createStatement();
-	     stat.executeUpdate("drop table if exists people;");
+	     stat.executeUpdate("drop table if exists cities;");
 	
-	     stat.executeUpdate("create table people (name varchar(20), occupation varchar(20));");
+	     stat.executeUpdate("create table cities (name varchar(20), invest INT);");
 	
 	     PreparedStatement prep = (PreparedStatement) conn
-	           .prepareStatement("insert into people values (?, ?);");
-	     prep.setString(1, "Gandhi");
-	     prep.setString(2, "politics");
+	           .prepareStatement("insert into cities values (?, ?),(?, ?),(?, ?),(?, ?),(?, ?),(?, ?),(?, ?),(?, ?),(?, ?);");
+	     prep.setString(1, "NEW YORK");
+	     prep.setInt(2, 5000000);
+	     prep.setString(3, "WASHINGTON");
+	     prep.setInt(4, 3968339);
+	     prep.setString(5, "CHICAGO");
+	     prep.setInt(6, 4999553);
+	     prep.setString(7, "PORTLAND");
+	     prep.setInt(8, 6170483);
+	     prep.setString(9, "BRIDGEPORT");
+	     prep.setInt(10, 4999998);
+	     prep.setString(11, "WESTMINSTER");
+	     prep.setInt(12, 5000000);
+	     prep.setString(13, "DENVER");
+	     prep.setInt(14, 4999280);
+	     prep.setString(15, "AUSTIN");
+	     prep.setInt(16, 3968339);
+	     prep.setString(17, "SAINT PAUL");
+	     prep.setInt(18, 3968339);
 	     prep.execute();
 	
-	     ResultSet rs = stat.executeQuery("select * from people;");
+	     ResultSet rs = stat.executeQuery("select * from cities;");
 	     while (rs.next()) {
-	        str += "name = " + rs.getString("name");
-	        str += "\njob = " + rs.getString("occupation");
+	        str += "\ncity = " + rs.getString("name");
+	        str += " invest = " + rs.getString("invest");
 	     }
 	     rs.close();
-	     conn.close();
 	  } catch (Exception e) {
 	     str += e.toString();
 	     e.printStackTrace();
 	  } 
 	
+	  disconnect(conn);
+	  
     return str;
   }
 

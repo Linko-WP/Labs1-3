@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 
-import org.mortbay.log.Log;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -243,20 +241,16 @@ public class StockWatcher implements EntryPoint {
     MyServiceAsync emailService = (MyServiceAsync) GWT.create(MyService.class);
 
     String temp = " cadena ";
-    emailService.myMethod(temp, new AsyncCallback<String>(){
+    emailService.initialize_db(temp, new AsyncCallback<String>(){
     	public void onSuccess(String result) {
-            // do some UI stuff to show success
     		System.out.println("Success:" + result);
           }
 
           public void onFailure(Throwable caught) {
-            // do some UI stuff to show failure
-        	Window.alert("RPC to sendEmail() failed.");
+        	Window.alert("RPC to initialize_db() failed.");
       		System.out.println("Fail\n" + caught);
           }
-    } );
-
-    
+    } );  
     
     
   }
