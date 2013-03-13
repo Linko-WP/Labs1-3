@@ -15,6 +15,7 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.DOM;
@@ -31,8 +32,7 @@ import com.google.gwt.user.client.ui.TextBox;
 
 
 public class StockWatcher implements EntryPoint {
-
-  
+ 
   private AbsolutePanel mainPanel = new AbsolutePanel();
   private AbsolutePanel targetPanel = new AbsolutePanel();
   
@@ -45,21 +45,8 @@ public class StockWatcher implements EntryPoint {
   private HorizontalPanel insertPanel = new HorizontalPanel();
   private TextArea insertCityTextA = new TextArea();
   private Button insertProjectButton = new Button("Insert");
- 
-  // Initial elements
-  /*private ArrayList<InvestData> initial_elements = new ArrayList<InvestData>(Arrays.asList(
-		  new InvestData("NEW YORK",10027,5000000),
-		  new InvestData("WASHINGTON",20009,3968339),
-		  new InvestData("CHICAGO",60634,4999553),
-		  new InvestData("PORTLAND",97209,6170483),
-		  new InvestData("BRIDGEPORT",6604,4999998),
-		  new InvestData("WESTMINSTER",80234,5000000),
-		  new InvestData("DENVER",80229,4999280),
-		  new InvestData("AUSTIN",20009,3968339),
-		  new InvestData("SAINT PAUL",20009,3968339)));*/
   
   private String results;
-
   private ArrayList<String> cities  = new ArrayList<String>();;
   private ArrayList<Integer> amounts = new ArrayList<Integer>();;
   
@@ -71,14 +58,13 @@ public class StockWatcher implements EntryPoint {
   private Label errorMsgLabel = new Label();
   public InvestData currentCity = new InvestData();
   
-  //Create a DragController for each logical area where a set of draggable
+  // Create a DragController for each logical area where a set of draggable
   // widgets and drop targets will be allowed to interact with one another.
-  //PickupDragController dragController = new PickupDragController(RootPanel.get(), true);
+  // PickupDragController dragController = new PickupDragController(RootPanel.get(), true);
   FlexTableRowDragController dragController = new FlexTableRowDragController(RootPanel.get());
   
-  //create a DropController for each drop target on which draggable widgets
-  // can be dropped
-  //DropController dropController = new AbsolutePositionDropController(targetPanel);
+  // Create a DropController for each drop target on which draggable widgets can be dropped
+  // DropController dropController = new AbsolutePositionDropController(targetPanel);
   FlexTableRowDropController dropController = new FlexTableRowDropController(targetPanel, this);
   
   /**
@@ -138,7 +124,6 @@ public class StockWatcher implements EntryPoint {
     			Integer ammt = itr_am.next();
     			elements.add(new InvestData(city,ammt,0));
     		}
-
 		
           }
 
@@ -205,12 +190,9 @@ public class StockWatcher implements EntryPoint {
     mainPanel.add(insertPanel);
     mainPanel.add(lastUpdatedLabel);
       
-
     // Add both panels to the root panel
     RootPanel.get().add(targetPanel);
     RootPanel.get().add(mainPanel);
-
-
     
     // Positioner is always constrained to the boundary panel
     // Use 'true' to also constrain the draggable or drag proxy to the boundary panel
@@ -256,9 +238,6 @@ public class StockWatcher implements EntryPoint {
       }
     });
  
-    
-  
-
     
     
   }
@@ -403,7 +382,7 @@ public class StockWatcher implements EntryPoint {
 
 	    // Display timestamp showing last refresh.
 	    lastUpdatedLabel.setText("Last update : "
-	        + DateTimeFormat.getMediumDateTimeFormat().format(new Date()));
+	        + DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date()));
 	    
 	    // Clear any errors.
 	    errorMsgLabel.setVisible(false);
@@ -427,7 +406,6 @@ public class StockWatcher implements EntryPoint {
 	    		ammount.getAmmount());
 	    NumberFormat changeFormat = NumberFormat.getFormat("+#,##0.00;-#,##0.00");
 	    String changeText = changeFormat.format(ammount.getChange());
-	    //String changePercentText = changeFormat.format(ammount.getChangePercent());
 
 	    // Populate the Price and Change fields with new data.
 	    investFlexTable.setText(row, 1, priceText);
@@ -503,7 +481,9 @@ public class StockWatcher implements EntryPoint {
 	      		System.out.println("Fail\n" + caught);
 	          }
 	    } );
-	    
+	    // Depuration prints
+	    System.out.println(cities);
+	    System.out.println(amounts);
 	}
 }
 
