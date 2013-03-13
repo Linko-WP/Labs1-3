@@ -459,6 +459,9 @@ public class StockWatcher implements EntryPoint {
 	  String[] result = text.split("\\s");
 	  int size = result.length;
 	  int j= 0;
+	  int obt_amount=0;
+
+	  String money = result[j+1];
 	  
 	  if (size <2){
 	    	Window.alert("It must content: CITY AMMOUNT");
@@ -467,10 +470,19 @@ public class StockWatcher implements EntryPoint {
 	  if (cities.contains(result[j])){
 	    	Window.alert("The city: '" + result[j] + "' is already in the system.");
 		      return;
-	  }
- 		  
-	  int obt_amount = Integer.parseInt(result[j+1]);
-	
+	  }	  
+	  
+	  try {  
+		  int leche = Integer.parseInt(money);
+	  
+	  }  
+	  catch(NumberFormatException nfe)  
+	  {  
+		  Window.alert("The city: '" + result[j] + "' is already in the system.");
+	      return;  
+	  }  
+
+	 
 	  elements.add(new InvestData(result[j],obt_amount,0));
 	  addCity(result[j]);
 	  amounts.add(obt_amount);
