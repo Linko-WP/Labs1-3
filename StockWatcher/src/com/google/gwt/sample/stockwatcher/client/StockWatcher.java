@@ -130,7 +130,8 @@ public class StockWatcher implements EntryPoint {
     			cities.add(myList.get(i));
     			amounts.add(Integer.parseInt(myList.get(i+1)));
     		}
-    		// Add to the elements arraylist every city of the cities vector
+    		
+    		// Add to the elements arraylist every obtained value
     		Iterator<Integer> itr_am = amounts.iterator();
 
     		for(String city:cities){ 
@@ -468,12 +469,27 @@ public class StockWatcher implements EntryPoint {
 		      return;
 	  }
  		  
-	  int ammount = Integer.parseInt(result[j+1]);
+	  int obt_amount = Integer.parseInt(result[j+1]);
 	
-	  elements.add(new InvestData(result[j],ammount,0));
+	  elements.add(new InvestData(result[j],obt_amount,0));
 	  addCity(result[j]);
-	  amounts.add(ammount);
+	  amounts.add(obt_amount);
 	  insertCityTextA.setText("");
+	  
+	  
+	    MyServiceAsync emailService = (MyServiceAsync) GWT.create(MyService.class);
+	    emailService.insert_into_db("cities", "('"+result[j]+"', "+ obt_amount +")", new AsyncCallback<String>(){
+	    	public void onSuccess(String result) {
+	    		System.out.println("CIUDAD METIA: " + result);
+	    		results = result;
+	          }
+
+	          public void onFailure(Throwable caught) {
+	        	Window.alert("RPC to initialize_db() failed.");
+	      		System.out.println("Fail\n" + caught);
+	          }
+	    } );
+	    
 	}
 }
 
