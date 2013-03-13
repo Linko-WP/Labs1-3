@@ -50,7 +50,7 @@ public class MyServiceImpl extends RemoteServiceServlet implements MyService {
 	public String initialize_db(String s) {
 		// Do something interesting with 's' here on the server.
 	  
-	  String str = "Result: ";
+	  String str = "";
 	  Connection conn = connect();	// Connect to database
 	  try {
 	     Statement stat = (Statement) conn.createStatement();
@@ -82,8 +82,9 @@ public class MyServiceImpl extends RemoteServiceServlet implements MyService {
 	
 	     ResultSet rs = stat.executeQuery("select * from cities;");
 	     while (rs.next()) {
-	        str += "\ncity = " + rs.getString("name");
-	        str += " invest = " + rs.getString("invest");
+	        str +=  rs.getString("name");
+	        str += ", " + rs.getString("invest");
+	        str += ", ";
 	     }
 	     rs.close();
 	  } catch (Exception e) {

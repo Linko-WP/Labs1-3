@@ -58,12 +58,10 @@ public class StockWatcher implements EntryPoint {
 		  new InvestData("AUSTIN",20009,3968339),
 		  new InvestData("SAINT PAUL",20009,3968339)));
   
-  private ArrayList<String> cities = new ArrayList<String>(Arrays.asList(
-		  "NEW YORK","WASHINGTON","CHICAGO", "PORTLAND", "BRIDGEPORT", "WESTMINSTER", "DENVER", "AUSTIN", "SAINT PAUL"));
-  private ArrayList<Integer> zips = new ArrayList<Integer>(Arrays.asList(
-		  10027,20009,60634, 97209, 6604, 80234,80229,78714,55104));
-  private ArrayList<Integer> amounts = new ArrayList<Integer>(Arrays.asList(
-		  5000000,3968339,4999553,6170483,4999998,5000000,4999280,4135000,5000000));
+  private String results;
+
+  private ArrayList<String> cities  = new ArrayList<String>();;
+  private ArrayList<Integer> amounts = new ArrayList<Integer>();;
   
   // Arraylist of InvestData
   private ArrayList<InvestData> elements = new ArrayList<InvestData>();
@@ -113,18 +111,43 @@ public class StockWatcher implements EntryPoint {
     });
 	    
 	  
-	  
-	  
-	// Add to the arraylist every city of the cities vector
-	Iterator<Integer> itr_zip = zips.iterator();
-	Iterator<Integer> itr_am = amounts.iterator();
+    // (1) Create the client proxy. Note that although you are creating the
+    // service interface proper, you cast the result to the asynchronous
+    // version of the interface. The cast is always safe because the
+    // generated proxy implements the asynchronous interface automatically.
+    //
+    MyServiceAsync emailService = (MyServiceAsync) GWT.create(MyService.class);
 
-	for(String city:cities){ 
-		Integer zip = itr_zip.next();
-		Integer ammt = itr_am.next();
-		elements.add(new InvestData(city,zip,ammt,0));
-	}
+    String temp = " cadena ";
+    emailService.initialize_db(temp, new AsyncCallback<String>(){
+    	public void onSuccess(String result) {
+    		System.out.println("SuccessS:" + result);
+    		results = result;
+    		
+    		//We add the results into the arrays for the cities and amounts
+    		ArrayList<String> myList = new ArrayList<String>(Arrays.asList(results.split(", ")));
+    		for(int i=0; i<myList.size()-1; i=i+2){
+    			cities.add(myList.get(i));
+    			amounts.add(Integer.parseInt(myList.get(i+1)));
+    		}
+    		// Add to the elements arraylist every city of the cities vector
+    		Iterator<Integer> itr_am = amounts.iterator();
 
+    		for(String city:cities){ 
+    			Integer ammt = itr_am.next();
+    			elements.add(new InvestData(city,ammt,0));
+    		}
+
+		
+          }
+
+          public void onFailure(Throwable caught) {
+        	Window.alert("RPC to initialize_db() failed.");
+      		System.out.println("Fail\n" + caught);
+          }
+    } );
+	
+    
 	// Create draggable panel
 	RootPanel.get().setPixelSize(1000, 800);
 	mainPanel.setPixelSize(495, 800);
@@ -233,28 +256,12 @@ public class StockWatcher implements EntryPoint {
     });
  
     
-    // (1) Create the client proxy. Note that although you are creating the
-    // service interface proper, you cast the result to the asynchronous
-    // version of the interface. The cast is always safe because the
-    // generated proxy implements the asynchronous interface automatically.
-    //
-    MyServiceAsync emailService = (MyServiceAsync) GWT.create(MyService.class);
+  
 
-    String temp = " cadena ";
-    emailService.initialize_db(temp, new AsyncCallback<String>(){
-    	public void onSuccess(String result) {
-    		System.out.println("Success:" + result);
-          }
-
-          public void onFailure(Throwable caught) {
-        	Window.alert("RPC to initialize_db() failed.");
-      		System.out.println("Fail\n" + caught);
-          }
-    } );  
     
     
   }
-  
+
   
   /**
    * Add cities to FlexTable. Executed when the user clicks the addStockButton or
@@ -443,6 +450,8 @@ public class StockWatcher implements EntryPoint {
 	 * Inserts a new City on the table that didn't exists until now
 	 * */
 	 private void insertCity( ) {
+		 
+		 //TODO: insert into the database
 	   
 	  final String text = insertCityTextA.getText().toUpperCase().trim();
 	  insertCityTextA.setFocus(true);
