@@ -47,7 +47,7 @@ public class StockWatcher implements EntryPoint {
   private Button insertProjectButton = new Button("Insert");
  
   // Initial elements
-  private ArrayList<InvestData> initial_elements = new ArrayList<InvestData>(Arrays.asList(
+  /*private ArrayList<InvestData> initial_elements = new ArrayList<InvestData>(Arrays.asList(
 		  new InvestData("NEW YORK",10027,5000000),
 		  new InvestData("WASHINGTON",20009,3968339),
 		  new InvestData("CHICAGO",60634,4999553),
@@ -56,7 +56,7 @@ public class StockWatcher implements EntryPoint {
 		  new InvestData("WESTMINSTER",80234,5000000),
 		  new InvestData("DENVER",80229,4999280),
 		  new InvestData("AUSTIN",20009,3968339),
-		  new InvestData("SAINT PAUL",20009,3968339)));
+		  new InvestData("SAINT PAUL",20009,3968339)));*/
   
   private String results;
 
@@ -66,7 +66,7 @@ public class StockWatcher implements EntryPoint {
   // Arraylist of InvestData
   private ArrayList<InvestData> elements = new ArrayList<InvestData>();
   private ArrayList<String> awards = new ArrayList<String>();
-  private static final int REFRESH_INTERVAL = 5000; // ms
+  //private static final int REFRESH_INTERVAL = 5000; // ms
   private InvestDataServiceAsync stockPriceSvc = GWT.create(InvestDataService.class);
   private Label errorMsgLabel = new Label();
   public InvestData currentCity = new InvestData();
@@ -427,7 +427,7 @@ public class StockWatcher implements EntryPoint {
 	    		ammount.getAmmount());
 	    NumberFormat changeFormat = NumberFormat.getFormat("+#,##0.00;-#,##0.00");
 	    String changeText = changeFormat.format(ammount.getChange());
-	    String changePercentText = changeFormat.format(ammount.getChangePercent());
+	    //String changePercentText = changeFormat.format(ammount.getChangePercent());
 
 	    // Populate the Price and Change fields with new data.
 	    investFlexTable.setText(row, 1, priceText);
@@ -477,11 +477,9 @@ public class StockWatcher implements EntryPoint {
 	  String money = result[j+1];
 	  
 	  try {  
-		  int temp = Integer.parseInt(money);
+		  //int temp = Integer.parseInt(money);
 	  
-	  }  
-	  catch(NumberFormatException nfe)  
-	  {  
+	  }catch(NumberFormatException nfe){  
 		  Window.alert("The parameter amount must be numeric ");
 	      return;  
 	  }  

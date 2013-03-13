@@ -4,7 +4,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.google.gwt.sample.stockwatcher.client.InvestData;
 import com.google.gwt.sample.stockwatcher.client.MyService;
 import com.mysql.jdbc.*;
 

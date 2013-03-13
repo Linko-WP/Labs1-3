@@ -11,7 +11,13 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class InvestDataServiceImpl extends RemoteServiceServlet implements
 		InvestDataService {
 
-	private static final double MAX_AWARD= 50.0; // $100.00
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	// Comento esto porque parece ser que no se usa
+	//private static final double MAX_AWARD= 50.0; // $100.00
 	private static final double MAX_PRICE_CHANGE = 10; // +/- 2%
 	  
 	
@@ -28,7 +34,7 @@ public class InvestDataServiceImpl extends RemoteServiceServlet implements
 		            throw new DelistedException("ERR");
 		          }
 		        
-		      double ammount = cities[i].getAmmount() * MAX_AWARD;
+		      //double ammount = cities[i].getAmmount() * MAX_AWARD;
 		      double change = (MAX_PRICE_CHANGE * (rnd.nextDouble() * 2f - 1f));
 
 		      ammounts[i] = new InvestData(cities[i].getCity(), cities[i].getAmmount(), change);
