@@ -451,9 +451,7 @@ public class StockWatcher implements EntryPoint {
 	 * Inserts a new City on the table that didn't exists until now
 	 * */
 	 private void insertCity( ) {
-		 
-		 //TODO: insert into the database
-	   
+
 	  final String text = insertCityTextA.getText().toUpperCase().trim();
 	  insertCityTextA.setFocus(true);
 	  String[] result = text.split("\\s");
@@ -461,30 +459,37 @@ public class StockWatcher implements EntryPoint {
 	  int j= 0;
 	  int obt_amount=0;
 
-	  String money = result[j+1];
-	  
+	 
+	 /*Checks for invalid input: 
+	  * 	1 - less than 2 parameters
+	  *     2 - City already in the system
+	  *	    3 - Non-numeric character in the amount
+	*/
 	  if (size <2){
 	    	Window.alert("It must content: CITY AMMOUNT");
 		      return;
 	  }
 	  if (cities.contains(result[j])){
+		  
 	    	Window.alert("The city: '" + result[j] + "' is already in the system.");
 		      return;
 	  }	  
+	  String money = result[j+1];
 	  
 	  try {  
-		  int leche = Integer.parseInt(money);
+		  int temp = Integer.parseInt(money);
 	  
 	  }  
 	  catch(NumberFormatException nfe)  
 	  {  
-		  Window.alert("The city: '" + result[j] + "' is already in the system.");
+		  Window.alert("The parameter amount must be numeric ");
 	      return;  
 	  }  
 
-	 
+	  obt_amount = Integer.parseInt(money);
 	  elements.add(new InvestData(result[j],obt_amount,0));
 	  addCity(result[j]);
+	  cities.add(result[j]);
 	  amounts.add(obt_amount);
 	  insertCityTextA.setText("");
 	  
@@ -492,12 +497,11 @@ public class StockWatcher implements EntryPoint {
 	    MyServiceAsync emailService = (MyServiceAsync) GWT.create(MyService.class);
 	    emailService.insert_into_db("cities", "('"+result[j]+"', "+ obt_amount +")", new AsyncCallback<String>(){
 	    	public void onSuccess(String result) {
-	    		System.out.println("CIUDAD METIA: " + result);
 	    		results = result;
 	          }
 
 	          public void onFailure(Throwable caught) {
-	        	Window.alert("RPC to initialize_db() failed.");
+	        	Window.alert("Inserting new city in the DataBase failed.");
 	      		System.out.println("Fail\n" + caught);
 	          }
 	    } );
